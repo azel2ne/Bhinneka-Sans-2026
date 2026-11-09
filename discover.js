@@ -81,6 +81,30 @@
     moveLens(box.left+box.width/2,box.top+box.height/2);
   }
 
+  const infoCard = discover.querySelector('.discover-info');
+  let alignFrame = 0;
+  function alignInfoBottom() {
+    // Discover becomes a stacked layout on mobile, where independent
+    // bottom alignment would pull the information card over the viewer.
+    if (discover.hidden || window.matchMedia('(max-width: 760px)').matches) {
+      infoCard.style.removeProperty('--discover-info-align-offset');
+      return;
+    }
+    const glyphInk = object.querySelector('.discover-letter-solid');
+    if (!glyphInk) return;
+    // Actual rendered SVG path bounds (not the padded SVG stage) ensure
+    // the card also lines up for thin I's and unusually short U forms.
+    const current = parseFloat(infoCard.style.getPropertyValue('--discover-info-align-offset')) || 0;
+    const difference = glyphInk.getBoundingClientRect().bottom - infoCard.getBoundingClientRect().bottom;
+    if (Math.abs(difference) > 0.35) {
+      infoCard.style.setProperty('--discover-info-align-offset', `${(current + difference).toFixed(2)}px`);
+    }
+  }
+  function scheduleInfoBottomAlign() {
+    cancelAnimationFrame(alignFrame);
+    alignFrame = requestAnimationFrame(alignInfoBottom);
+  }
+
   function paint() {
     const item = items[active];
     object.innerHTML = svgLayer(item);
@@ -98,6 +122,7 @@
     setText('discoverDescriptionKo', item.descriptionKo);
     setText('discoverInfoIndex', number(active+1) + ' OF ' + number(items.length));
     stage.setAttribute('aria-label', `${item.code}: ${item.province}. ${item.descriptionEn}`);
+    scheduleInfoBottomAlign();
     document.querySelectorAll('.discover-vowel-button').forEach(btn => {
       const selected = btn.dataset.vowel === item.letter;
       btn.classList.toggle('active', selected);
@@ -109,6 +134,18 @@
     active = (index + items.length) % items.length;
     paint();
   }
+
+  // The letterform archive lives below Discover. A tile sends its exact
+  // OpenType variant code here, updates the large X-ray glyph & data panel,
+  // and takes the visitor back up to the large viewer.
+  window.BHINNEKA_OPEN_LETTERFORM = (code) => {
+    const index = items.findIndex(item => item.code === code);
+    if(index < 0){console.warn('Unknown provincial letterform:',code);return false;}
+    showIndex(index);
+    if(discover.hidden) openDiscover();
+    window.scrollTo({top:0,behavior:'smooth'});
+    return true;
+  };
 
   function openDiscover() {
     if (typeof stopHomeSequence === 'function') stopHomeSequence();
@@ -179,15 +216,24 @@
     setXrayVisible(false);
   });
 
+  window.addEventListener('resize', scheduleInfoBottomAlign, {passive: true});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleInfoBottomAlign);
   $d('discoverFromStudio').addEventListener('click', openDiscover);
-  $d('studioHome').addEventListener('click', goHome);
   $d('discoverHome').addEventListener('click', goHome);
   $d('discoverPlayground').addEventListener('click', goPlayground);
+  $d('discoverScrollToArchive').addEventListener('click', () => {
+    const archive = $d('specimen');
+    if (archive) archive.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+      block: 'start'
+    });
+  });
   $d('discoverPrev').addEventListener('click', () => showIndex(active-1));
   $d('discoverNext').addEventListener('click', () => showIndex(active+1));
   $d('discoverSourcesToggle').addEventListener('click', () => {
     const showing = $d('discoverSources').hidden;
     $d('discoverSources').hidden = !showing;
+    discover.classList.toggle('sources-expanded', showing);
     $d('discoverSourcesToggle').setAttribute('aria-expanded', String(showing));
     $d('discoverSourcesToggle').textContent = showing ? 'DATA SOURCES −' : 'DATA SOURCES +';
   });

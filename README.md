@@ -83,3 +83,65 @@ Behaviour, data, glyphs and interactions are unchanged. What changed:
 ## Fix — editor focus border removed (Nov 9)
 
 Removed the shared `[contenteditable]:focus-visible` outline that created a black rectangle around the typing area on Safari. The text cursor and editing behavior remain unchanged; button keyboard focus outlines are preserved.
+
+
+## Updated: Typewriter, Reset and Discover Archive (2026-11-10)
+- The top navigation reads HOME · DISCOVER · TYPEWRITER (formerly CREATE YOUR OWN). The animated home entry button remains CREATE YOUR OWN.
+- VOWELS → RESET replaces CHANGE. Clicking RESET immediately unlocks all selected vowels and resumes their red, randomly cycling variants without deleting your text. SHUFFLE and direct vowel selection still work.
+- The complete Letterform Archive (38 provincial glyphs plus Plus Jakarta Sans base character reference) now appears **under the large X-ray viewer in Discover**, not below the Typewriter.
+- Click a provincial glyph in the archive to open that exact variant in the big Discover viewer, automatically update its province name, region, stats and English/Korean descriptions, and scroll back to the large viewer.
+- The base glyph library remains a reference grid; it does not represent a province, so it isn't a selectable entry in the 38-province X-ray viewer.
+- To deploy: upload the updated top-level website files to the connected GitHub repository's production branch; Vercel will automatically deploy them to the existing custom domain if its project connection is configured.
+
+
+## November 2026 archive-scroll polish
+
+- Browser tab title is exactly `Bhinneka Sans`.
+- Down-arrow at the lower right of Discover's first viewport smoothly navigates to Letterform Archive.
+- Archive begins below the visible first screen, with extra spacing to avoid a partial section.
+- Removed `content-visibility: auto` from glyph cells to avoid variable scroll offsets on Safari.
+- Added light layout/paint containment instead, keeping explicit glyph cell dimensions.
+- Native manual wheel/trackpad scrolling is preserved; button navigation is smoothly animated.
+- This remains a static website, ready for GitHub/Vercel.
+
+
+## Latest navigation & web typography update
+- Navigation on Discover: HOME · TYPEWRITER · DISCOVER.
+- Navigation on Typewriter: TYPEWRITER · DISCOVER (no HOME). The original home screen still works via the HOME link on Discover.
+- UI and English descriptions now use **Inter**. Korean descriptions and province names use **Pretendard Variable**.
+- Custom **Bhinneka Sans** remains unchanged for the animated glyphs, Typewriter artwork and specimen.
+- Webfonts load from Google Fonts (Inter) and the Pretendard official jsDelivr stylesheet (v1.3.9). An internet connection is needed to load webfonts; offline fallback fonts are specified.
+
+
+## Navigation + text fonts (2026-11-10)
+- Typewriter header: HOME · TYPEWRITER · DISCOVER, left-aligned. HOME returns to the animated landing screen.
+- Discover header: HOME · TYPEWRITER · DISCOVER.
+- Removed the old bottom-right HOME action from the Typewriter status bar.
+- Latin UI text uses Inter, Korean descriptions and province names use Pretendard Variable (served via public web CDNs). The custom Bhinneka Sans font is retained for the letters.
+- Note: Inter and Pretendard require internet access when first loaded; browser/system fallbacks are provided.
+
+
+## Discover layout fine adjustment (2026-11-10)
+- Raised the Discover letter, info panel, and Data Sources row slightly on desktop.
+- Added a small spacer before the Letterform Archive to prevent its heading appearing at the bottom of the initial screen.
+- Adjusted short laptop viewport dimensions (height <= 800px) so the bottom footer row remains visible.
+- Kept Data Sources expandable, the gray arrow link, the original Typewriter, and all font data unchanged.
+
+
+## Final Discover spacing refinements (10 Nov 2026)
+
+- Removes extra lower dividers and excess empty space below expanded DATA NOTES; the notes remain collapsible.
+- When expanded, the Letterform Archive follows without the old 56px spacer/double rule.
+- Raises the Discover glyph and information panel together by 9px on desktop/tablet.
+- Leaves the footer's DATA SOURCES toggle and down arrow in the same row.
+
+
+## Latest layout refinement
+On desktop, the Discover glyph, vowel selector, and province information panel have been lifted by an additional 16px (total -25px), leaving the DATA SOURCES/footer, archive, and all interactive behavior unchanged.
+
+
+## Discover — precise information card alignment (Nov 10, 2026)
+- Desktop: only the information card is translated vertically to align its bottom border with the actual bottom of the selected letterform's SVG path. The letter, left/right arrows, and A/E/I/O/U row are unchanged.
+- This automatically readjusts when a province is selected or the viewport changes, including for short and narrow glyphs.
+- Mobile retains the original stacked layout.
+- DATA SOURCES accordion and archive link are untouched.

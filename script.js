@@ -117,7 +117,30 @@ function shuffle(){
   chars.forEach((ch,i)=>{const max=SETS[ch.toLowerCase()];if(max){variants[i]=1+Math.floor(Math.random()*max);locked[i]=true;updateLetter(i)}});
   previewActive=true;refitIfOverflowing();status('ALL VOWELS HAVE BEEN CHOSEN. CLICK ANY ONE TO CHANGE IT.');markActivity();
 }
-function pickNearby(){let pos=getCaretOffset();let index=pos>0&&SETS[chars[pos-1]?.toLowerCase()]?pos-1:pos;if(!SETS[chars[index]?.toLowerCase()])index=chars.findIndex(ch=>SETS[ch.toLowerCase()]);if(index>=0)cycle(index);else status('TYPE A VOWEL (A E I O U) FIRST.')}
+// RESET restores every vowel (including manually selected or shuffled vowels)
+// to the live red animation without changing the typed text or consonants.
+function resetVowels(){
+  clearTimeout(typingTimer);
+  previewEnabled=true;
+  previewActive=true;
+  hoveredIndex=null;
+  hideTooltip();
+  setVowelPicking(false);
+  editor.querySelectorAll('.letter.hovering').forEach(el=>el.classList.remove('hovering'));
+  let count=0;
+  chars.forEach((ch,i)=>{
+    if(!SETS[ch.toLowerCase()])return;
+    count++;
+    locked[i]=false;
+    variants[i]=0;
+    updateLetter(i);
+  });
+  if(count){
+    animatePending();
+    status('ALL VOWELS RESET. RED LETTERFORMS ARE ANIMATING AGAIN.');
+  } else status('TYPE A VOWEL (A E I O U) TO SEE THE RED ANIMATION.');
+  markActivity();
+}
 function enter(){screen.hidden=true;studio.hidden=false;document.body.style.overflow='auto';window.scrollTo(0,0);markActivity();if(chars.length&&previewEnabled)schedulePreview();requestAnimationFrame(()=>{fitText();editor.focus();caretAt(chars.length)})}
 function screensaver(){studio.hidden=true;screen.hidden=false;document.body.style.overflow='hidden';clearTimeout(typingTimer);previewActive=false;startHomeSequence()}
 
@@ -311,9 +334,10 @@ editor.addEventListener('click',e=>{const el=e.target.closest?.('.letter.vowel')
 editor.addEventListener('paste',e=>{e.preventDefault();const content=(e.clipboardData||window.clipboardData).getData('text/plain');insertAtCaret(content)});
 
 $('startButton').addEventListener('click',enter);
-$('backButton').addEventListener('click',screensaver);
+$('studioHome').addEventListener('click', screensaver);
 
-$('sampleButton').addEventListener('click',()=>{setText(WORDS[Math.floor(Math.random()*WORDS.length)]);editor.focus()});$('clearButton').addEventListener('click',()=>{chars=[];variants=[];locked=[];hoveredIndex=null;clearTimeout(typingTimer);previewActive=false;render(0);editor.focus();status('START TYPING.')});$('shuffleButton').addEventListener('click',shuffle);$('changeButton').addEventListener('click',pickNearby);
+
+$('sampleButton').addEventListener('click',()=>{setText(WORDS[Math.floor(Math.random()*WORDS.length)]);editor.focus()});$('clearButton').addEventListener('click',()=>{chars=[];variants=[];locked=[];hoveredIndex=null;clearTimeout(typingTimer);previewActive=false;render(0);editor.focus();status('START TYPING.')});$('shuffleButton').addEventListener('click',shuffle);$('resetButton').addEventListener('click',resetVowels);
 $('smallerButton').addEventListener('click',()=>{fontSize=Math.max(32,fontSize-16);render(getCaretOffset());markActivity()});$('largerButton').addEventListener('click',()=>{fontSize=Math.min(300,fontSize+16);render(getCaretOffset());markActivity()});
 $('tighterButton').addEventListener('click',()=>{letterSpacing=Math.max(-.15,Math.round((letterSpacing-.01)*1000)/1000);render(getCaretOffset());markActivity()});$('looserButton').addEventListener('click',()=>{letterSpacing=Math.min(.25,Math.round((letterSpacing+.01)*1000)/1000);render(getCaretOffset());markActivity()});
 $('invertButton').addEventListener('click',()=>{isDark=!isDark;studio.classList.toggle('invert',isDark);markActivity()});
@@ -349,7 +373,7 @@ function createSpecimen(){
    const {vowel,province,glyph,set}=item;
    const n=Number(set.slice(2));
    const cell=document.createElement('button');cell.type='button';cell.className='glyph-cell province-cell';
-   cell.setAttribute('aria-label',`${province}, ${glyph}. Add to playground.`);
+   cell.setAttribute('aria-label',`${province}, ${glyph}. Open in Discover X-ray viewer.`);
    const sample=document.createElement('span');sample.className='glyph-sample';sample.textContent=vowel;sample.style.fontFeatureSettings=feature(n);
    const meta=document.createElement('span');meta.className='glyph-meta';
    const provinceName=document.createElement('span');provinceName.className='province-name';provinceName.textContent=province;
@@ -357,9 +381,10 @@ function createSpecimen(){
    meta.append(provinceName,glyphName);
    cell.append(sample,meta);
    cell.addEventListener('click',()=>{
-     const pos=chars.length;chars.push(vowel);variants.push(n);locked.push(true);
-     render(pos+1);window.scrollTo({top:0,behavior:'smooth'});editor.focus();
-     status(`${province.toUpperCase()} / ${glyph} ADDED.`);markActivity()
+     // The same code identifies the province in Discover's bilingual 38-entry atlas.
+     if(typeof window.BHINNEKA_OPEN_LETTERFORM === 'function'){
+       window.BHINNEKA_OPEN_LETTERFORM(glyph);
+     }
    });
    alternates.appendChild(cell);
  }
@@ -373,7 +398,7 @@ function createSpecimen(){
 }
 window.addEventListener('resize',()=>{if(!studio.hidden)fitText();else layoutHome()});
 document.fonts.ready.then(()=>{if(!studio.hidden)fitText()});
-$('backToTop').addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});editor.focus()});
+$('backToTop').addEventListener('click',()=>{document.getElementById('discoverMain').scrollIntoView({behavior:'smooth',block:'start'})});
 
 
 /* V3 — Responsive three-row word wall, keeping V1's playful jump animation.
