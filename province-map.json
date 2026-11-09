@@ -1,0 +1,268 @@
+[
+  {
+    "vowel": "a",
+    "set": "ss01",
+    "glyph": "a.ss01",
+    "province": "Banten",
+    "source_glyph": "a.ss03"
+  },
+  {
+    "vowel": "a",
+    "set": "ss02",
+    "glyph": "a.ss02",
+    "province": "East Java",
+    "source_glyph": "a.ss02"
+  },
+  {
+    "vowel": "a",
+    "set": "ss03",
+    "glyph": "a.ss03",
+    "province": "West Java",
+    "source_glyph": "a.ss01"
+  },
+  {
+    "vowel": "a",
+    "set": "ss04",
+    "glyph": "a.ss04",
+    "province": "Central Java",
+    "source_glyph": "a.ss04"
+  },
+  {
+    "vowel": "a",
+    "set": "ss05",
+    "glyph": "a.ss05",
+    "province": "DI Yogyakarta",
+    "source_glyph": "a.ss05"
+  },
+  {
+    "vowel": "a",
+    "set": "ss06",
+    "glyph": "a.ss06",
+    "province": "Bali",
+    "source_glyph": "a.ss06"
+  },
+  {
+    "vowel": "a",
+    "set": "ss07",
+    "glyph": "a.ss07",
+    "province": "East Nusa Tenggara",
+    "source_glyph": "a.ss07"
+  },
+  {
+    "vowel": "a",
+    "set": "ss08",
+    "glyph": "a.ss08",
+    "province": "West Nusa Tenggara",
+    "source_glyph": "a.ss08"
+  },
+  {
+    "vowel": "a",
+    "set": "ss09",
+    "glyph": "a.ss09",
+    "province": "DKI Jakarta",
+    "source_glyph": "a.ss09"
+  },
+  {
+    "vowel": "e",
+    "set": "ss01",
+    "glyph": "e.ss01",
+    "province": "Aceh",
+    "source_glyph": "e.ss05"
+  },
+  {
+    "vowel": "e",
+    "set": "ss02",
+    "glyph": "e.ss02",
+    "province": "North Sumatra",
+    "source_glyph": "e.ss03"
+  },
+  {
+    "vowel": "e",
+    "set": "ss03",
+    "glyph": "e.ss03",
+    "province": "West Sumatra",
+    "source_glyph": "e.ss02"
+  },
+  {
+    "vowel": "e",
+    "set": "ss04",
+    "glyph": "e.ss04",
+    "province": "Riau",
+    "source_glyph": "e.ss06"
+  },
+  {
+    "vowel": "e",
+    "set": "ss05",
+    "glyph": "e.ss05",
+    "province": "Riau Islands",
+    "source_glyph": "e.ss04"
+  },
+  {
+    "vowel": "e",
+    "set": "ss06",
+    "glyph": "e.ss06",
+    "province": "South Sumatra",
+    "source_glyph": "e.ss08"
+  },
+  {
+    "vowel": "e",
+    "set": "ss07",
+    "glyph": "e.ss07",
+    "province": "Jambi",
+    "source_glyph": "e.ss07"
+  },
+  {
+    "vowel": "e",
+    "set": "ss08",
+    "glyph": "e.ss08",
+    "province": "Bengkulu",
+    "source_glyph": "e.ss09"
+  },
+  {
+    "vowel": "e",
+    "set": "ss09",
+    "glyph": "e.ss09",
+    "province": "Bangka Belitung",
+    "source_glyph": "e.ss10"
+  },
+  {
+    "vowel": "e",
+    "set": "ss10",
+    "glyph": "e.ss10",
+    "province": "Lampung",
+    "source_glyph": "e.ss01"
+  },
+  {
+    "vowel": "i",
+    "set": "ss01",
+    "glyph": "i.ss01",
+    "province": "South Sulawesi",
+    "source_glyph": "i.ss01"
+  },
+  {
+    "vowel": "i",
+    "set": "ss02",
+    "glyph": "i.ss02",
+    "province": "West Sulawesi",
+    "source_glyph": "i.ss02"
+  },
+  {
+    "vowel": "i",
+    "set": "ss03",
+    "glyph": "i.ss03",
+    "province": "Southeast Sulawesi",
+    "source_glyph": "i.ss04"
+  },
+  {
+    "vowel": "i",
+    "set": "ss04",
+    "glyph": "i.ss04",
+    "province": "North Sulawesi",
+    "source_glyph": "i.ss03"
+  },
+  {
+    "vowel": "i",
+    "set": "ss05",
+    "glyph": "i.ss05",
+    "province": "Central Sulawesi",
+    "source_glyph": "i.ss05"
+  },
+  {
+    "vowel": "i",
+    "set": "ss06",
+    "glyph": "i.ss06",
+    "province": "Gorontalo",
+    "source_glyph": "i.ss06"
+  },
+  {
+    "vowel": "o",
+    "set": "ss01",
+    "glyph": "o.ss01",
+    "province": "Papua",
+    "source_glyph": "o.ss01"
+  },
+  {
+    "vowel": "o",
+    "set": "ss02",
+    "glyph": "o.ss02",
+    "province": "Central Papua",
+    "source_glyph": "o.ss05"
+  },
+  {
+    "vowel": "o",
+    "set": "ss03",
+    "glyph": "o.ss03",
+    "province": "South Papua",
+    "source_glyph": "o.ss06"
+  },
+  {
+    "vowel": "o",
+    "set": "ss04",
+    "glyph": "o.ss04",
+    "province": "West Papua",
+    "source_glyph": "o.ss02"
+  },
+  {
+    "vowel": "o",
+    "set": "ss05",
+    "glyph": "o.ss05",
+    "province": "Maluku",
+    "source_glyph": "o.ss07"
+  },
+  {
+    "vowel": "o",
+    "set": "ss06",
+    "glyph": "o.ss06",
+    "province": "North Maluku",
+    "source_glyph": "o.ss08"
+  },
+  {
+    "vowel": "o",
+    "set": "ss07",
+    "glyph": "o.ss07",
+    "province": "Southwest Papua",
+    "source_glyph": "o.ss03"
+  },
+  {
+    "vowel": "o",
+    "set": "ss08",
+    "glyph": "o.ss08",
+    "province": "Highland Papua",
+    "source_glyph": "o.ss04"
+  },
+  {
+    "vowel": "u",
+    "set": "ss01",
+    "glyph": "u.ss01",
+    "province": "South Kalimantan",
+    "source_glyph": "u.ss01"
+  },
+  {
+    "vowel": "u",
+    "set": "ss02",
+    "glyph": "u.ss02",
+    "province": "East Kalimantan",
+    "source_glyph": "u.ss02"
+  },
+  {
+    "vowel": "u",
+    "set": "ss03",
+    "glyph": "u.ss03",
+    "province": "North Kalimantan",
+    "source_glyph": "u.ss03"
+  },
+  {
+    "vowel": "u",
+    "set": "ss04",
+    "glyph": "u.ss04",
+    "province": "West Kalimantan",
+    "source_glyph": "u.ss04"
+  },
+  {
+    "vowel": "u",
+    "set": "ss05",
+    "glyph": "u.ss05",
+    "province": "Central Kalimantan",
+    "source_glyph": "u.ss05"
+  }
+]

@@ -1,0 +1,505 @@
+/* ============================================================
+   Bhinneka Sans — consolidated stylesheet (cleanup, Nov 2026)
+
+   One pass per component. Earlier builds stacked V3…V15 overrides on
+   top of each other with !important; this file keeps only the rules
+   that actually win in the browser, plus the fixes listed in README.
+
+   Sections: 1 Tokens & reset · 2 Home · 3 Shared navigation ·
+   4 Playground (masthead, canvas, toolbar, status bar) ·
+   5 Specimen · 6 Export dialog · 7 Discover · 8 Motion preferences
+   ============================================================ */
+
+/* ---------- 1. Tokens & reset ---------- */
+@font-face{font-family:Bhinneka;src:url('BhinnekaSans-1108.ttf') format('truetype');font-display:swap}
+
+:root{
+  font-family:Arial,Helvetica,sans-serif;
+  color:#111;background:#fff;
+  --line:#d4d4d4;
+  --muted:#777;
+  --paper:#fff;
+  --ink:#111;
+  --preview-ink:#B02424;   /* live, unchosen vowels */
+  --dim-ink:#6B6B6B;       /* everything else while inspecting a vowel */
+  --gutter:clamp(18px,3vw,48px);   /* one left/right page inset for every view */
+  --header-h:54px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;overflow-x:hidden}
+button{cursor:pointer;font:inherit}
+button:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+[hidden]{display:none!important}
+
+@media(max-width:640px){
+  :root{--gutter:16px;--header-h:50px}
+}
+
+/* ---------- 2. Home — word wall + floating CTA ---------- */
+.screensaver{position:fixed;inset:0;overflow:hidden;background:#f7f7f7;color:#111;isolation:isolate}
+
+.home-board-wrap{position:absolute;inset:0;overflow:hidden;display:flex;align-items:stretch;justify-content:center}
+
+.home-board{
+  position:relative;flex:1;width:100%;height:100%;background:#fff;
+  display:grid;
+  grid-template-columns:repeat(var(--home-cols,8),minmax(0,1fr));
+  grid-template-rows:repeat(var(--home-rows,3),minmax(0,1fr));
+}
+/* Column rules drawn as one repeating gradient so they run the full viewport height. */
+.home-board::before{
+  content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
+  background-image:linear-gradient(90deg,transparent calc(100% - 1px),#8a8a8a calc(100% - 1px));
+  background-size:calc(100% / var(--home-cols,8)) 100%;
+  background-repeat:repeat-x;
+  clip-path:inset(0 1px 0 0); /* no rule on the outer right edge */
+}
+
+.home-cell{position:relative;overflow:hidden;min-width:0;display:flex;align-items:center;justify-content:center}
+
+.home-letter{
+  display:block;
+  font-family:Bhinneka,Arial,sans-serif;font-weight:400;line-height:1;
+  font-size:min(calc(82vw / var(--home-cols,8)),calc(73dvh / var(--home-rows,3)),220px);
+  letter-spacing:-.075em;color:#0b0b0b;
+  transform:translateY(0);transition:font-feature-settings .08s linear;
+  will-change:transform;user-select:none;
+}
+.home-letter.spinning{animation:homeJackpot .78s cubic-bezier(.2,.72,.18,1)}
+@keyframes homeJackpot{
+  0%{transform:translateY(0)}
+  14%{transform:translateY(-16%)}
+  28%{transform:translateY(11%)}
+  42%{transform:translateY(-13%)}
+  58%{transform:translateY(9%)}
+  74%{transform:translateY(-6%)}
+  100%{transform:translateY(0)}
+}
+
+/* Bouncing "DVD" pill. script.js positions it with an inline transform and recolours it on each bounce. */
+.screensaver .start-button{
+  position:absolute;left:0;top:0;z-index:8;
+  width:clamp(175px,22vw,274px);height:clamp(44px,5.8vw,70px);padding:0 18px;
+  display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:50%;background:#dedede;color:#111;
+  font:600 clamp(11px,1.12vw,16px)/1.15 Arial,Helvetica,sans-serif;letter-spacing:-.025em;
+  text-align:center;white-space:nowrap;
+  transform:translate3d(0,0,0);will-change:transform;transition:none;
+}
+.screensaver .start-button:hover{filter:brightness(.97)}
+
+@media(max-width:620px){
+  .home-letter{
+    font-size:min(calc(81vw / var(--home-cols,4)),calc(75dvh / var(--home-rows,7)),160px);
+    letter-spacing:-.07em;
+  }
+  .screensaver .start-button{
+    width:clamp(135px,45vw,200px);height:clamp(42px,14vw,60px);
+    font-size:clamp(10px,2.5vw,14px);
+  }
+}
+
+/* ---------- 3. Shared navigation (Playground + Discover) ---------- */
+.site-nav-links{display:flex;align-items:center;justify-content:flex-start;gap:clamp(18px,2.1vw,36px);min-width:0;flex-wrap:nowrap}
+
+.site-nav-link{
+  display:inline-flex;align-items:center;
+  appearance:none;border:0;border-radius:0;background:transparent;color:inherit;
+  font:400 11px/1.25 Arial,Helvetica,sans-serif;letter-spacing:.055em;
+  padding:12px 0;white-space:nowrap;text-decoration:none;cursor:pointer;
+}
+.site-nav-active{font-weight:700;cursor:default}
+.site-nav-link:not(.site-nav-active):hover{text-decoration:underline;text-underline-offset:5px}
+.site-nav-link:focus-visible{outline:1px solid currentColor;outline-offset:4px}
+
+@media(max-width:760px){
+  .site-nav-links{gap:clamp(12px,3vw,24px)}
+  .site-nav-link{font-size:10px;letter-spacing:.012em;padding:8px 0}
+}
+@media(max-width:440px){
+  .site-nav-links{gap:11px}
+  .site-nav-link{font-size:9px;letter-spacing:0}
+}
+
+/* ---------- 4. Playground ---------- */
+.studio{display:block;min-height:100dvh;background:var(--paper);color:var(--ink)}
+.studio.invert{--paper:#111;--ink:#fff}
+
+.masthead{
+  height:var(--header-h);flex:none;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:0 var(--gutter);border-bottom:1px solid var(--line);
+  background:var(--paper);color:var(--ink);
+}
+
+.download-font{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 0;
+  font:500 11px/1.2 Arial,Helvetica,sans-serif;letter-spacing:.035em;
+  color:inherit;text-decoration:none;white-space:nowrap;
+}
+.download-font:hover{text-decoration:underline;text-underline-offset:4px}
+.download-font:focus-visible{outline:1px solid currentColor;outline-offset:2px}
+
+/* Canvas: fills the viewport between masthead, toolbar and status bar. */
+.canvas{
+  position:relative;display:flex;flex-direction:column;overflow:auto;
+  height:calc(100dvh - var(--header-h) - 74px - 35px);min-height:390px;
+  padding:18px var(--gutter) 12px;
+  background:var(--paper);color:var(--ink);
+}
+.canvas-top{
+  flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  font-size:10px;line-height:1.5;letter-spacing:.025em;color:var(--muted);white-space:nowrap;
+}
+.canvas-top #counter{font-variant-numeric:tabular-nums}
+
+.editor-stage{position:relative;display:flex;flex:1;min-height:0;align-items:center;justify-content:center;width:100%;padding:12px 0 5px;overflow:visible}
+
+.editor{
+  display:block;flex:none;width:100%;min-height:1.2em;padding:0;
+  border:none;outline:none;box-shadow:none;
+  font-family:Bhinneka,Arial,sans-serif;font-size:240px;font-weight:400;line-height:1.14;letter-spacing:-.035em;
+  font-kerning:normal;text-align:center;
+  white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;overflow:visible;
+  caret-color:var(--ink);color:var(--ink);position:relative;z-index:1;
+}
+.editor .letter{position:relative;font-feature-settings:normal;cursor:text;transition:color .25s ease}
+.editor .letter.vowel{cursor:pointer}
+.editor .letter.vowel.hovering{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:12px}
+.editor .letter.vowel.pending{color:var(--preview-ink)}
+/* While a vowel is being inspected, only chosen vowels and the hovered one keep full ink. */
+.editor.picking-vowel .letter:not(.chosen):not(.hovering){color:var(--dim-ink)}
+.editor.picking-vowel .letter.chosen,
+.editor.picking-vowel .letter.hovering{color:var(--ink)}
+
+/* Two-line tag above the hovered vowel; script.js sets left/top. */
+.glyph-tooltip{
+  position:absolute;z-index:50;transform:translate(-50%,-100%);pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:0 3px;max-width:200px;white-space:nowrap;text-align:center;
+  background:var(--paper);color:var(--ink);line-height:1.05;
+}
+.tooltip-glyph{display:block;font:500 11px/1.1 Arial,Helvetica,sans-serif;color:var(--ink)}
+.tooltip-province{display:block;font:400 10px/1.1 Arial,Helvetica,sans-serif;color:var(--dim-ink)}
+
+/* Toolbar: six labelled groups on one row; wraps to 3 + 3 and then 2 + 2 + 2. */
+.toolbar{
+  display:flex;align-items:stretch;justify-content:space-between;flex-wrap:nowrap;flex:none;
+  min-height:74px;background:var(--paper);color:var(--ink);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.tool-group{
+  flex:1 1 auto;min-width:0;display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;
+  gap:clamp(5px,.6vw,13px);padding:11px clamp(7px,.95vw,18px);
+  border-right:1px solid var(--line);text-align:left;
+}
+.tool-group:last-child{border-right:0}
+.tool-label{flex:0 0 auto;margin:0 5px 0 0;font:400 10px/1.2 Arial,Helvetica,sans-serif;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.tool-group button,
+.statusbar button{
+  border:0;background:transparent;color:inherit;padding:5px 3px;
+  font:400 11px/1.2 Arial,Helvetica,sans-serif;letter-spacing:0;white-space:nowrap;
+}
+.tool-group button:hover,
+.tool-group button.active,
+.statusbar button:hover{text-decoration:underline;text-underline-offset:4px}
+.tool-group button:focus-visible{outline:1px solid currentColor;outline-offset:2px}
+.tool-group output{min-width:28px;text-align:center;font:400 11px Arial,Helvetica,sans-serif}
+
+.statusbar{
+  min-height:35px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:0 var(--gutter);background:var(--paper);color:var(--muted);
+  font-size:9px;letter-spacing:.01em;
+}
+#status{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.statusbar button{flex:none;padding:3px 0;font-size:10px;color:var(--ink)}
+
+@media(max-width:1150px){
+  .toolbar{flex-wrap:wrap;min-height:120px;border-bottom:0}
+  .tool-group{flex:1 1 31%;min-height:60px;border-bottom:1px solid var(--line)}
+  .tool-group:nth-child(3n){border-right:0}
+  .canvas{height:calc(100dvh - var(--header-h) - 120px - 35px)}
+}
+@media(max-width:650px){
+  .toolbar{min-height:180px}
+  .tool-group{flex:1 1 47%;padding:8px 7px;gap:5px}
+  .tool-group:nth-child(3n){border-right:1px solid var(--line)}
+  .tool-group:nth-child(2n){border-right:0}
+  .tool-label{font-size:9px;margin-right:2px}
+  .tool-group button,.tool-group output{font-size:10px}
+  .canvas{height:calc(100dvh - var(--header-h) - 180px - 35px);min-height:360px;padding:12px var(--gutter)}
+  .canvas-top{font-size:9px}
+  .tooltip-glyph{font-size:10px}
+  .tooltip-province{font-size:9px}
+  .download-font{font-size:10px;letter-spacing:0}
+  /* Status messages wrap instead of being cut off with an ellipsis. */
+  .statusbar{padding:7px var(--gutter)}
+  #status{white-space:normal;line-height:1.35}
+}
+@media(max-width:440px){
+  .download-font{font-size:9px}
+}
+
+/* ---------- 5. Specimen (below the playground) ---------- */
+.specimen{
+  padding:clamp(26px,3vw,50px) var(--gutter) 38px;
+  border-top:1px solid var(--line);background:var(--paper);color:var(--ink);
+}
+.archive-intro{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  border-top:1px solid var(--line);padding:12px 0 0;
+  font:400 11px/1.35 Arial,Helvetica,sans-serif;color:#888;
+}
+.archive-header{
+  display:grid;grid-template-columns:minmax(240px,1fr) minmax(330px,430px);align-items:start;
+  gap:clamp(28px,7vw,120px);margin:32px 0 52px;
+}
+.archive-header h2{margin:0;font:700 clamp(36px,3.35vw,54px)/1.09 Arial,Helvetica,sans-serif;letter-spacing:-.05em}
+.archive-header p{margin:0;padding-top:4px;max-width:430px;justify-self:end;font:400 clamp(14px,1vw,16px)/1.5 Arial,Helvetica,sans-serif;letter-spacing:-.015em}
+
+.specimen-subheading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:0 0 15px}
+.specimen-subheading h3{margin:0;font-size:17px;font-weight:400;letter-spacing:-.02em}
+.base-heading{margin-top:80px}
+
+.glyph-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.glyph-cell{
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  height:clamp(136px,15vw,215px);min-width:0;padding:12px 10px;text-align:center;
+  border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:var(--paper);color:var(--ink);
+}
+.glyph-sample{flex:1;display:flex;align-items:center;justify-content:center;max-width:100%;overflow:hidden;font-family:Bhinneka,Arial,sans-serif;font-size:clamp(64px,9vw,145px);font-weight:400;line-height:1}
+.glyph-meta{width:100%;display:flex;justify-content:space-between;gap:7px;font-size:10px;letter-spacing:.01em;color:var(--muted);text-align:left}
+
+/* Province cells are buttons: click adds that letterform to the playground. */
+.province-grid .province-cell{height:clamp(185px,19vw,240px)}
+.province-grid .glyph-sample{width:100%;min-height:0;font-size:clamp(78px,8vw,132px)}
+.province-grid .glyph-meta{min-height:25px;align-items:flex-end;gap:8px;font:400 10px/1.4 Arial,Helvetica,sans-serif}
+.province-grid .province-name{flex:1;min-width:0;text-align:left;color:inherit;font:400 10px/1.3 Arial,Helvetica,sans-serif}
+.province-grid .glyph-name{flex:none;white-space:nowrap;text-align:right;color:inherit;font:400 10px/1.3 Arial,Helvetica,sans-serif}
+button.glyph-cell:hover,
+button.glyph-cell:focus-visible{background:var(--ink);color:var(--paper)}
+button.glyph-cell:hover .glyph-meta,
+button.glyph-cell:focus-visible .glyph-meta{color:var(--paper)}
+
+.bases .glyph-cell{height:clamp(108px,11vw,170px)}
+.bases .glyph-sample{font-size:clamp(52px,7vw,98px)}
+
+.specimen-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:65px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:10px;letter-spacing:.01em;
+}
+.specimen-footer button{border:0;background:none;color:inherit;text-decoration:underline;text-underline-offset:3px}
+
+@media(max-width:1100px){
+  .glyph-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media(max-width:800px){
+  .archive-header{grid-template-columns:1fr;gap:22px;margin:24px 0 42px}
+  .archive-header p{justify-self:start;max-width:580px}
+}
+@media(max-width:680px){
+  .glyph-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .specimen-subheading{flex-direction:column;align-items:start}
+  .glyph-cell{height:145px}
+  .glyph-sample{font-size:82px}
+  .province-grid .province-cell{height:185px}
+  .province-grid .glyph-sample{font-size:85px}
+}
+@media(max-width:550px){
+  .archive-intro{font-size:10px}
+  .archive-header h2{font-size:36px}
+  .archive-header p{font-size:14px}
+}
+
+/* ---------- 6. Export / share dialog ---------- */
+.export-overlay{
+  position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  padding:22px;background:rgba(0,0,0,.72);font-family:Arial,Helvetica,sans-serif;color:#111;
+}
+.export-panel{width:min(100%,550px);max-height:min(92dvh,800px);overflow:auto;background:#fff;border:1px solid #111;box-shadow:0 24px 70px #0006}
+.export-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #d3d3d3;font:500 11px/1.3 Arial,Helvetica,sans-serif;letter-spacing:.07em}
+.export-header button{background:none;border:none;padding:4px 0;font:inherit;color:#111;letter-spacing:.02em}
+.export-header button:hover{text-decoration:underline;text-underline-offset:3px}
+.export-preview-frame{height:clamp(185px,33vh,310px);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:16px;background:#e8e8e8}
+.export-preview-frame img{display:block;max-width:100%;max-height:100%;object-fit:contain;background:#fff;box-shadow:0 1px 14px #0002}
+.export-file-row{display:flex;justify-content:space-between;gap:12px;padding:11px 22px;border-top:1px solid #d3d3d3;font-size:11px;letter-spacing:.02em}
+.export-file-row span:last-child{color:#777}
+.export-description{margin:0;padding:24px 22px 20px;font-size:17px;line-height:1.4;letter-spacing:-.025em}
+.export-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #d3d3d3}
+.export-actions button{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  min-height:74px;padding:18px 22px;border:0;border-right:1px solid #d3d3d3;
+  background:#fff;color:#111;font:500 11px/1.25 Arial,Helvetica,sans-serif;letter-spacing:.03em;text-align:left;
+}
+.export-actions button:last-child{border-right:0}
+.export-actions button:hover:not(:disabled){background:#111;color:#fff}
+.export-actions button:disabled{color:#999;cursor:not-allowed;background:#f6f6f6}
+.export-help{min-height:64px;margin:0;padding:15px 22px;border-top:1px solid #d3d3d3;color:#777;font-size:11px;line-height:1.5}
+body.export-open{overflow:hidden!important}
+
+@media(max-width:550px){
+  .export-panel{max-height:88dvh}
+  .export-header{padding:14px 17px}
+  .export-file-row,.export-description,.export-help{padding-left:17px;padding-right:17px}
+  .export-description{font-size:15px}
+  .export-actions button{min-height:65px;padding:13px 12px 13px 17px;font-size:10px}
+}
+
+/* ---------- 7. Discover ---------- */
+.discover-page{
+  --d-line:#c3c3c3;--d-ink:#141414;--d-paper:#fafafa;
+  --discover-block-height:clamp(520px,calc(100dvh - 340px),570px);
+  min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden;
+  background:var(--d-paper);color:var(--d-ink);font-family:Arial,Helvetica,sans-serif;
+}
+.discover-page button{font-family:inherit;border:0;border-radius:0;background:none;color:inherit;cursor:pointer}
+.discover-page button:focus-visible{outline:2px solid #111;outline-offset:5px}
+
+/* Same height and inset as the playground masthead so the links don't jump between views. */
+.discover-nav{
+  height:var(--header-h);flex:none;display:flex;align-items:center;justify-content:flex-start;gap:16px;
+  padding:0 var(--gutter);border-bottom:1px solid var(--d-line);
+}
+
+.discover-main{
+  flex:1;min-height:0;display:grid;align-items:start;
+  grid-template-columns:minmax(0,1.14fr) minmax(375px,.86fr);
+  column-gap:clamp(28px,3.3vw,54px);
+  padding:clamp(48px,6.2vh,72px) var(--gutter) 34px;
+}
+
+/* Left column: the letter, arrows, then the vowel shortcuts. */
+.discover-gallery{min-width:0;display:flex;flex-direction:column;align-items:stretch}
+
+.discover-display{
+  position:relative;order:0;flex:0 0 auto;width:100%;height:var(--discover-block-height);
+  display:flex;align-items:center;justify-content:center;overflow:visible;
+}
+.discover-object-stage{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  height:100%;width:76%;max-width:580px;
+  cursor:crosshair;outline-offset:8px;
+}
+.discover-object-stage:focus-visible{outline:1px solid #141414}
+.discover-object{position:relative;width:100%;height:100%}
+.discover-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;fill:#151515;pointer-events:none}
+
+.discover-arrow{
+  position:absolute;z-index:5;top:50%;transform:translateY(-50%);
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:400;line-height:1;transition:background .15s;
+}
+.discover-arrow:hover{background:#ececec}
+.discover-prev{left:5px}
+.discover-next{right:5px}
+
+.discover-vowels{order:1;flex:0 0 auto;width:100%;min-height:46px;margin:30px 0 0;display:flex;align-items:center;justify-content:center}
+.discover-vowels-inner{display:flex;align-items:center;justify-content:center}
+.discover-vowel-buttons{display:flex;align-items:center;justify-content:center;gap:clamp(6px,calc(4.2vw - 28px),35px)}
+/* Letters stay 11px; the padding gives each tab a 44px-tall hit area. */
+.discover-vowel-button{
+  flex:none;min-width:44px;min-height:44px;padding:10px 14px;
+  background:transparent;color:#777;
+  font-size:11px;font-weight:400;letter-spacing:.02em;line-height:1.2;
+  text-decoration:underline transparent;text-decoration-thickness:1px;text-underline-offset:6px;
+  transition:color .16s,text-decoration-color .16s;
+}
+.discover-vowel-button:hover{color:#111}
+.discover-vowel-button.active{color:#111;font-weight:700;text-decoration-color:#111}
+
+/* Right column: information panel. min-height (not height) so long descriptions never spill past the border. */
+.discover-info{
+  min-width:0;min-height:var(--discover-block-height);align-self:start;
+  display:flex;flex-direction:column;border:1px solid var(--d-line);background:#fafafa;
+}
+.discover-title-row{min-height:130px;padding:22px 22px 19px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--d-line)}
+.discover-title-text{min-width:0}
+.discover-title-row h1{margin:11px 0 7px;font-size:clamp(24px,2.25vw,34px);font-weight:500;letter-spacing:-.035em;line-height:1.15;overflow-wrap:anywhere}
+.discover-eyebrow{font-size:10px;letter-spacing:.085em;color:#666}
+.discover-korean-name{font-size:14px;color:#555}
+.discover-title-meta{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:36px;align-self:stretch;white-space:nowrap}
+.discover-title-meta #discoverInfoIndex{font-size:9px;letter-spacing:.085em;color:#777}
+.discover-index-big{font-size:13px;letter-spacing:.025em}
+
+.discover-stat-row{display:grid;grid-template-columns:1fr 1fr;min-height:100px;border-bottom:1px solid var(--d-line)}
+.discover-stat{min-width:0;padding:20px 22px}
+.discover-stat+.discover-stat{border-left:1px solid var(--d-line)}
+.discover-stat-label{font-size:10px;letter-spacing:.05em;color:#555;line-height:1.5}
+.discover-stat-label small{display:block;font-size:8px;letter-spacing:.08em;color:#888}
+.discover-stat-value{margin-top:11px;font-size:clamp(15px,1.55vw,22px);font-weight:500;letter-spacing:-.02em;overflow-wrap:anywhere}
+
+.discover-copy{flex:1 1 auto;display:flex;align-items:center;padding:18px 22px;border-bottom:1px solid var(--d-line)}
+.discover-copy p{margin:0;font-size:clamp(14px,1.2vw,18px);line-height:1.58;letter-spacing:-.015em}
+.discover-copy-kr{border-bottom:0}
+.discover-copy-kr p{font-size:clamp(14px,1.18vw,17px);line-height:1.7;word-break:keep-all}
+
+.discover-footer{display:flex;justify-content:flex-end;align-items:center;gap:20px;min-height:43px;padding:15px var(--gutter);border-top:1px solid var(--d-line);font-size:9px;letter-spacing:.08em}
+.discover-footer button{font-size:9px;letter-spacing:.06em}
+.discover-footer button:hover{text-decoration:underline}
+.discover-sources{padding:17px var(--gutter);border-top:1px solid var(--d-line);color:#666;font-size:12px;line-height:1.6}
+.discover-sources a{color:inherit;text-decoration:underline}
+
+/* X-ray lens (only visible while hovering / pinned). Geometry comes from discover.js. */
+.discover-letter-solid{fill:#151515}
+.discover-lens-content,.discover-lens-ring{opacity:0;transition:opacity .12s ease;pointer-events:none}
+.discover-object.is-xray .discover-lens-content,
+.discover-object.is-xray .discover-lens-ring{opacity:1}
+.discover-lens-ring{fill:none;stroke:#777;stroke-width:.8}
+.discover-xray-letter{fill:none;stroke:#101010;stroke-width:1.25;vector-effect:non-scaling-stroke}
+.discover-xray-guides{fill:none;stroke:#787878;stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.discover-xray-controls{fill:#fff;stroke:#222;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.discover-xray-anchors{fill:#111;stroke:#fff;stroke-width:.55;vector-effect:non-scaling-stroke}
+
+/* Wide desktop: let the letter's ink reach past the panel's top and bottom edges. */
+@media(min-width:1051px){
+  .discover-object-stage{width:86%;max-width:660px;height:112%}
+  .discover-prev{left:30px}
+}
+
+@media(min-width:761px) and (max-width:1050px){
+  .discover-page{--discover-block-height:clamp(460px,calc(100dvh - 255px),540px)}
+  .discover-main{grid-template-columns:minmax(0,1fr) minmax(335px,1fr);column-gap:20px;padding:40px var(--gutter) 30px}
+  .discover-object-stage{width:78%}
+  .discover-title-row{min-height:112px}
+  .discover-title-row h1{font-size:28px}
+  .discover-stat-row{min-height:87px}
+  .discover-stat{padding:14px 16px}
+  .discover-copy{padding:13px 16px}
+  .discover-copy p{font-size:14px;line-height:1.5}
+  .discover-copy-kr p{font-size:13px;line-height:1.6}
+  .discover-vowels{margin-top:22px}
+}
+
+@media(max-width:760px){
+  .discover-main{display:flex;flex-direction:column;align-items:stretch;gap:22px;padding:24px var(--gutter) 34px}
+  .discover-gallery{width:100%}
+  .discover-display{height:clamp(305px,47vh,440px)}
+  .discover-object-stage{width:76%;max-width:460px}
+  .discover-arrow{width:32px;height:32px;font-size:22px}
+  .discover-prev{left:0}
+  .discover-next{right:0}
+  .discover-vowels{min-height:36px;margin:16px 0 0}
+  .discover-vowel-buttons{gap:clamp(2px,8vw - 28px,22px)}
+  .discover-info{min-height:0;align-self:stretch}
+  .discover-title-row{min-height:110px;padding:18px 16px}
+  .discover-title-row h1{font-size:25px;margin:9px 0 5px}
+  .discover-title-meta{gap:20px}
+  .discover-stat-row{min-height:88px}
+  .discover-stat{padding:17px 16px}
+  .discover-copy{padding:18px 16px}
+  .discover-copy p{font-size:16px}
+  .discover-copy-kr p{font-size:14px}
+}
+@media(max-width:380px){
+  .discover-vowel-buttons{gap:0}
+  .discover-vowel-button{font-size:10px;padding:10px 12px}
+}
+
+/* ---------- 8. Motion preferences ---------- */
+@media(prefers-reduced-motion:reduce){
+  .home-letter.spinning{animation-duration:.01ms}
+  .screensaver .start-button{will-change:auto}
+  .discover-lens-content,.discover-lens-ring{transition:none}
+}

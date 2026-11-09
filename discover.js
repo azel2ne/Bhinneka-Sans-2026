@@ -1,0 +1,201 @@
+'use strict';
+/* Discover is self-contained; the Home FIX + Share Edition v11 interaction code is unchanged. */
+(() => {
+  const $d = id => document.getElementById(id);
+  const items = window.BHINNEKA_DISCOVER;
+  const atlas = window.BHINNEKA_GLYPHS;
+  const xrayData = window.BHINNEKA_XRAY;
+  if (!Array.isArray(items) || items.length !== 38 || !atlas || !xrayData) {
+    console.error('Discover requires the bilingual data and glyph atlas.');
+    return;
+  }
+  const discover = $d('discover');
+  const stage = $d('discoverStage');
+  const object = $d('discoverObject');
+  let active = 0;
+  let xrayPinned = false;
+  let xrayVisible = false;
+  const ns = 'http://www.w3.org/2000/svg';
+  const indices = Object.fromEntries('aeiou'.split('').map(v => [v, items.findIndex(item => item.letter === v)]));
+  const number = i => String(i).padStart(2, '0');
+  const setText = (id, value) => { $d(id).textContent = value; };
+  const population = n => (n / 1e6).toFixed(2) + ' MILLION';
+
+  function svgLayer(item) {
+    const [xmin, ymin, xmax, ymax] = item.bbox;
+    const pad = 25;
+    // ViewBox mirrors the real font coordinates, flipped to SVG's +Y-down system.
+    const vx = xmin-pad, vy = -(ymax+pad), vw = xmax-xmin+pad*2, vh = ymax-ymin+pad*2;
+    const vb = [vx, vy, vw, vh].join(' ');
+    const glyphName = atlas.substitutions[item.letter]?.[String(item.variant)] || item.code;
+    const glyph = atlas.glyphs[glyphName];
+    const meta = xrayData[glyphName];
+    if (!glyph || !glyph.d || !meta) return '';
+    const safePath = glyph.d.replace(/"/g,'&quot;');
+    const radius = Math.max(128, Math.min(215, vw * .36));
+    const guide = meta.guides;
+    const anchors = meta.anchors;
+    const controls = meta.controls;
+    // This is not an approximation: the tiny squares are the glyph's true on-curve
+    // nodes, and the dotted construction lines connect genuine quadratic controls.
+    return `<svg class="discover-layer discover-xray-svg" aria-hidden="true" viewBox="${vb}" preserveAspectRatio="xMidYMid meet">
+      <defs><clipPath id="discoverXrayClip" clipPathUnits="userSpaceOnUse"><circle id="discoverLensMask" cx="${vx+vw/2}" cy="${vy+vh/2}" r="${radius}"/></clipPath></defs>
+      <path class="discover-letter-solid" transform="scale(1,-1)" d="${safePath}"/>
+      <g class="discover-lens-content" clip-path="url(#discoverXrayClip)">
+        <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="#ffffff"/>
+        <g transform="scale(1,-1)">
+          <path class="discover-xray-letter" d="${safePath}"/>
+          <path class="discover-xray-guides" d="${guide}"/>
+          <path class="discover-xray-controls" d="${controls}"/>
+          <path class="discover-xray-anchors" d="${anchors}"/>
+        </g>
+      </g>
+      <circle id="discoverLensRing" class="discover-lens-ring" cx="${vx+vw/2}" cy="${vy+vh/2}" r="${radius}"/>
+    </svg>`;
+  }
+
+  function setXrayVisible(visible) {
+    xrayVisible = visible;
+    object.classList.toggle('is-xray', visible);
+  }
+
+  function moveLens(clientX, clientY) {
+    const svg = object.querySelector('svg');
+    if (!svg) return;
+    const matrix = svg.getScreenCTM();
+    if (!matrix) return;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const mapped = pt.matrixTransform(matrix.inverse());
+    for (const id of ['discoverLensMask','discoverLensRing']) {
+      const circle = svg.querySelector('#' + id);
+      if (!circle) continue;
+      circle.setAttribute('cx', String(mapped.x));
+      circle.setAttribute('cy', String(mapped.y));
+    }
+  }
+
+  function centerLens() {
+    const box = stage.getBoundingClientRect();
+    moveLens(box.left+box.width/2,box.top+box.height/2);
+  }
+
+  function paint() {
+    const item = items[active];
+    object.innerHTML = svgLayer(item);
+    xrayPinned = false;
+    setXrayVisible(false);
+    setText('discoverProvince', item.province);
+    setText('discoverProvinceKo', item.provinceKo);
+    setText('discoverRegionShort', `${item.region.toUpperCase()} / ${item.letter.toUpperCase()}`);
+    setText('discoverCode', item.code);
+    setText('discoverGlyph', item.code);
+    setText('discoverRegion', item.region);
+    setText('discoverPopulation', population(item.population));
+    setText('discoverFrequency', item.vowelFrequency.toFixed(2) + '%');
+    setText('discoverDescriptionEn', item.descriptionEn);
+    setText('discoverDescriptionKo', item.descriptionKo);
+    setText('discoverInfoIndex', number(active+1) + ' OF ' + number(items.length));
+    stage.setAttribute('aria-label', `${item.code}: ${item.province}. ${item.descriptionEn}`);
+    document.querySelectorAll('.discover-vowel-button').forEach(btn => {
+      const selected = btn.dataset.vowel === item.letter;
+      btn.classList.toggle('active', selected);
+      btn.setAttribute('aria-pressed', String(selected));
+    });
+  }
+
+  function showIndex(index) {
+    active = (index + items.length) % items.length;
+    paint();
+  }
+
+  function openDiscover() {
+    if (typeof stopHomeSequence === 'function') stopHomeSequence();
+    $d('screensaver').hidden = true;
+    $d('studio').hidden = true;
+    discover.hidden = false;
+    document.body.style.overflow = 'auto';
+    window.scrollTo(0,0);
+    paint();
+  }
+
+  function goHome() {
+    discover.hidden = true;
+    if (typeof screensaver === 'function') screensaver();
+    else $d('screensaver').hidden = false;
+  }
+
+  function goPlayground() {
+    discover.hidden = true;
+    if (typeof enter === 'function') enter();
+    else $d('studio').hidden = false;
+  }
+
+  for (const v of 'aeiou') {
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='discover-vowel-button';
+    btn.dataset.vowel = v;
+    btn.textContent = v.toUpperCase();
+    btn.setAttribute('aria-label', `Show ${v.toUpperCase()} letterforms`);
+    btn.addEventListener('click', () => showIndex(indices[v]));
+    $d('discoverVowelNav').appendChild(btn);
+  }
+  // Cursor-tracking X-ray lens. Pointer events are attached to the stage,
+  // while the SVG overlay cannot trap clicks or interfere with the nav arrows.
+  stage.addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+      setXrayVisible(true);
+      moveLens(event.clientX,event.clientY);
+    }
+  });
+  stage.addEventListener('pointermove', event => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+      setXrayVisible(true);
+      moveLens(event.clientX,event.clientY);
+    }
+  });
+  stage.addEventListener('pointerleave', event => {
+    if (!xrayPinned) setXrayVisible(false);
+  });
+  stage.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'touch') {
+      xrayPinned = !xrayPinned;
+      setXrayVisible(xrayPinned);
+      moveLens(event.clientX,event.clientY);
+    }
+  });
+  stage.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      xrayPinned = !xrayPinned;
+      if (xrayPinned) centerLens();
+      setXrayVisible(xrayPinned);
+    }
+  });
+  stage.addEventListener('blur', () => {
+    xrayPinned = false;
+    setXrayVisible(false);
+  });
+
+  $d('discoverFromStudio').addEventListener('click', openDiscover);
+  $d('studioHome').addEventListener('click', goHome);
+  $d('discoverHome').addEventListener('click', goHome);
+  $d('discoverPlayground').addEventListener('click', goPlayground);
+  $d('discoverPrev').addEventListener('click', () => showIndex(active-1));
+  $d('discoverNext').addEventListener('click', () => showIndex(active+1));
+  $d('discoverSourcesToggle').addEventListener('click', () => {
+    const showing = $d('discoverSources').hidden;
+    $d('discoverSources').hidden = !showing;
+    $d('discoverSourcesToggle').setAttribute('aria-expanded', String(showing));
+    $d('discoverSourcesToggle').textContent = showing ? 'DATA SOURCES −' : 'DATA SOURCES +';
+  });
+  window.addEventListener('keydown', (event) => {
+    if (discover.hidden || event.altKey || event.metaKey || event.ctrlKey) return;
+    if (event.key === 'ArrowLeft') { event.preventDefault(); showIndex(active-1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); showIndex(active+1); }
+    if (event.key === 'Escape') goHome();
+  });
+  paint();
+})();

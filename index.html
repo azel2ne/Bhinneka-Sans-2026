@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000000"><title>Bhinneka Sans — Interactive Typeface</title><link rel="stylesheet" href="style.css"><script src="glyphs-data.js" defer></script><script src="script.js" defer></script><script src="discover-data.js" defer></script><script src="xray-data.js" defer></script><script src="discover.js" defer></script></head>
+<body>
+<section id="screensaver" class="screensaver" aria-label="Bhinneka Sans interactive screensaver">
+  <div class="home-board-wrap">
+    <div id="homeBoard" class="home-board" aria-hidden="true"></div>
+  </div>
+  <button id="startButton" class="start-button" type="button">CREATE YOUR OWN</button>
+</section>
+<section id="studio" class="studio" hidden>
+  <header class="masthead">
+    <nav class="site-nav-links" aria-label="Main navigation">
+      <button class="site-nav-link" id="studioHome" type="button">HOME</button>
+      <button class="site-nav-link" id="discoverFromStudio" type="button">DISCOVER</button>
+      <span class="site-nav-link site-nav-active" aria-current="page">CREATE YOUR OWN ↗</span>
+    </nav>
+    <a class="download-font" href="BhinnekaSans-1108.ttf" download="BhinnekaSans-1108.ttf">DOWNLOAD FONT ↓</a>
+  </header>
+  <main id="canvas" class="canvas" aria-label="Typography playground">
+    <div class="canvas-top">TYPE / HOVER / SELECT<span id="counter">0 CHARACTERS</span></div>
+    <div class="editor-stage"><div id="glyphTooltip" class="glyph-tooltip" hidden></div><div id="editor" class="editor" contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true" aria-label="Type your words here"></div></div>
+    
+  </main>
+  <nav class="toolbar" aria-label="Typography controls">
+    <div class="tool-group"><span class="tool-label">TEXT</span><button id="sampleButton" type="button">GENERATE ↗</button><button id="clearButton" type="button">CLEAR ×</button></div>
+    <div class="tool-group"><span class="tool-label">VOWELS</span><button id="changeButton" type="button" title="Cycle the vowel at the caret">CHANGE ↻</button><button id="shuffleButton" type="button">SHUFFLE ↗</button></div>
+    <div class="tool-group"><span class="tool-label">SIZE</span><button id="smallerButton" type="button" aria-label="Decrease text size">−</button><output id="sizeValue">240</output><button id="largerButton" type="button" aria-label="Increase text size">+</button></div>
+    <div class="tool-group"><span class="tool-label">SPACING</span><button id="tighterButton" type="button" aria-label="Decrease letter spacing">−</button><output id="spacingValue">−3.5%</output><button id="looserButton" type="button" aria-label="Increase letter spacing">+</button></div>
+    <div class="tool-group"><span class="tool-label">PAPER</span><button id="invertButton" type="button">INVERT ◐</button></div>
+    <div class="tool-group save-group"><span class="tool-label">EXPORT</span><button id="savePng" type="button">PNG ↓</button><button id="saveSvg" type="button">SVG ↓</button></div>
+  </nav>
+  <div class="statusbar"><span id="status" role="status" aria-live="polite">TYPE TO BEGIN. LIVE VOWELS START AFTER A 2-SECOND PAUSE.</span><button id="backButton" type="button">HOME ↗</button></div>
+  <section class="specimen" id="specimen" aria-label="Typeface specimen and glyph library">
+    <div class="archive-intro"><span>01 — Letterform Archive</span><span>TYPE SPECIMEN</span></div>
+    <div class="archive-header">
+      <h2>38 Provinces<br>5 Vowels</h2>
+      <p>Built on Plus Jakarta Sans, Bhinneka Sans maps Indonesia’s five major island regions to five vowels based on their frequency in Bahasa Indonesia and regional population size. Each of the 38 letterforms represents a province’s cultural heritage, inviting visitors to explore and combine them into their own compositions.</p>
+    </div>
+    <div class="specimen-subheading"><h3>Provincial Letterforms</h3></div>
+    <div id="alternateGrid" class="glyph-grid alternates province-grid"></div>
+    <div class="specimen-subheading base-heading"><h3>Plus Jakarta Sans Base</h3></div>
+    <div id="baseGrid" class="glyph-grid bases"></div>
+    <footer class="specimen-footer"><span>Bhinneka Sans / Graduation Design Studio 2026</span><button id="backToTop" type="button">BACK TO PLAYGROUND ↑</button></footer>
+  </section>
+</section>
+
+
+<!-- Independent discover page. Source fonts / playground remain untouched. -->
+<section id="discover" class="discover-page" hidden aria-label="Discover Bhinneka Sans letterforms">
+  <header class="discover-nav">
+    <nav class="site-nav-links" aria-label="Main navigation">
+      <button class="site-nav-link" id="discoverHome" type="button">HOME</button>
+      <span class="site-nav-link site-nav-active" aria-current="page">DISCOVER</span>
+      <button class="site-nav-link" id="discoverPlayground" type="button">CREATE YOUR OWN ↗</button>
+    </nav>
+  </header>
+  <main class="discover-main">
+    <section class="discover-gallery" aria-label="Letterform viewer">
+      <div class="discover-display" id="discoverDisplay">
+        <button id="discoverPrev" class="discover-arrow discover-prev" type="button" aria-label="Previous letterform">←</button>
+        <div class="discover-object-stage" id="discoverStage" tabindex="0" aria-label="Selected letterform. Hover to see the real vector anchor points and curve handles; press Enter to inspect with keyboard.">
+          <div class="discover-object" id="discoverObject"></div>
+        </div>
+        <button id="discoverNext" class="discover-arrow discover-next" type="button" aria-label="Next letterform">→</button>
+      </div>
+      <nav class="discover-vowels" aria-label="Explore by vowel">
+        <div class="discover-vowels-inner">
+          <div class="discover-vowel-buttons" id="discoverVowelNav"></div>
+        </div>
+      </nav>
+    </section>
+    <aside class="discover-info" aria-label="Letterform information">
+      <div class="discover-title-row">
+        <div class="discover-title-text"><div class="discover-eyebrow" id="discoverRegionShort">JAVA / A</div><h1 id="discoverProvince">Banten</h1><div class="discover-korean-name" id="discoverProvinceKo">반텐</div></div>
+        <div class="discover-title-meta"><span id="discoverInfoIndex">01 OF 38</span><span class="discover-index-big" id="discoverCode">a.ss01</span></div>
+      </div>
+      <div class="discover-stat-row"><div class="discover-stat"><div class="discover-stat-label">ISLAND / REGION</div><div class="discover-stat-value" id="discoverRegion">Java</div></div><div class="discover-stat"><div class="discover-stat-label">FONT CODE</div><div class="discover-stat-value" id="discoverGlyph">a.ss01</div></div></div>
+      <div class="discover-stat-row"><div class="discover-stat"><div class="discover-stat-label">REGIONAL POPULATION <small>2020 CENSUS</small></div><div class="discover-stat-value" id="discoverPopulation">151.6M</div></div><div class="discover-stat"><div class="discover-stat-label">VOWEL FREQUENCY <small>TEXT SAMPLE</small></div><div class="discover-stat-value" id="discoverFrequency">22.29%</div></div></div>
+      <div class="discover-copy"><p id="discoverDescriptionEn"></p></div>
+      <div class="discover-copy discover-copy-kr"><p id="discoverDescriptionKo" lang="ko"></p></div>
+    </aside>
+  </main>
+  <footer class="discover-footer"><button id="discoverSourcesToggle" type="button" aria-expanded="false">DATA SOURCES +</button></footer>
+  <div id="discoverSources" class="discover-sources" hidden><strong>DATA NOTES.</strong> Regional populations use Indonesia's <a href="https://sensus.bps.go.id/topik/tabular/sp2020/1/0/0" target="_blank" rel="noopener noreferrer">BPS 2020 Population Census</a>; values refer to island groups, not individual provinces. Vowel frequencies come from <a href="https://wordcharactercounter.com/id/alat/frekuensi-huruf/" target="_blank" rel="noopener noreferrer">a 10,523-letter Indonesian text sample</a> (Universal Declaration of Human Rights), so results may differ across other corpora.</div>
+</section>
+
+<!-- Export and system-sharing dialog. No external server or personal data collection. -->
+<div id="exportDialog" class="export-overlay" hidden>
+  <section class="export-panel" role="dialog" aria-modal="true" aria-labelledby="exportTitle" aria-describedby="exportExplanation">
+    <div class="export-header"><span id="exportTitle">SAVE YOUR TYPE</span><button id="exportClose" type="button" aria-label="Close sharing options">CLOSE ×</button></div>
+    <div class="export-preview-frame"><img id="exportPreview" alt="Preview of your typographic composition"/></div>
+    <div class="export-file-row"><span id="exportFileName">BhinnekaSans.png</span><span id="exportFileSize"></span></div>
+    <p id="exportExplanation" class="export-description">Terima kasih! Choose a sharing method or download the file.</p>
+    <div class="export-actions">
+      <button id="exportEmail" type="button"><span>EMAIL</span><span>↗</span></button>
+      <button id="exportAirdrop" type="button"><span>AIRDROP</span><span>↗</span></button>
+      <button id="exportDownload" type="button"><span>DOWNLOAD</span><span>↓</span></button>
+    </div>
+    <p id="exportHelp" class="export-help" role="status" aria-live="polite">Mail and AirDrop open through your device’s share menu when supported.</p>
+  </section>
+</div>
+</body></html>

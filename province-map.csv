@@ -1,0 +1,39 @@
+﻿vowel,set,glyph,province,source_glyph
+a,ss01,a.ss01,Banten,a.ss03
+a,ss02,a.ss02,East Java,a.ss02
+a,ss03,a.ss03,West Java,a.ss01
+a,ss04,a.ss04,Central Java,a.ss04
+a,ss05,a.ss05,DI Yogyakarta,a.ss05
+a,ss06,a.ss06,Bali,a.ss06
+a,ss07,a.ss07,East Nusa Tenggara,a.ss07
+a,ss08,a.ss08,West Nusa Tenggara,a.ss08
+a,ss09,a.ss09,DKI Jakarta,a.ss09
+e,ss01,e.ss01,Aceh,e.ss05
+e,ss02,e.ss02,North Sumatra,e.ss03
+e,ss03,e.ss03,West Sumatra,e.ss02
+e,ss04,e.ss04,Riau,e.ss06
+e,ss05,e.ss05,Riau Islands,e.ss04
+e,ss06,e.ss06,South Sumatra,e.ss08
+e,ss07,e.ss07,Jambi,e.ss07
+e,ss08,e.ss08,Bengkulu,e.ss09
+e,ss09,e.ss09,Bangka Belitung,e.ss10
+e,ss10,e.ss10,Lampung,e.ss01
+i,ss01,i.ss01,South Sulawesi,i.ss01
+i,ss02,i.ss02,West Sulawesi,i.ss02
+i,ss03,i.ss03,Southeast Sulawesi,i.ss04
+i,ss04,i.ss04,North Sulawesi,i.ss03
+i,ss05,i.ss05,Central Sulawesi,i.ss05
+i,ss06,i.ss06,Gorontalo,i.ss06
+o,ss01,o.ss01,Papua,o.ss01
+o,ss02,o.ss02,Central Papua,o.ss05
+o,ss03,o.ss03,South Papua,o.ss06
+o,ss04,o.ss04,West Papua,o.ss02
+o,ss05,o.ss05,Maluku,o.ss07
+o,ss06,o.ss06,North Maluku,o.ss08
+o,ss07,o.ss07,Southwest Papua,o.ss03
+o,ss08,o.ss08,Highland Papua,o.ss04
+u,ss01,u.ss01,South Kalimantan,u.ss01
+u,ss02,u.ss02,East Kalimantan,u.ss02
+u,ss03,u.ss03,North Kalimantan,u.ss03
+u,ss04,u.ss04,West Kalimantan,u.ss04
+u,ss05,u.ss05,Central Kalimantan,u.ss05
