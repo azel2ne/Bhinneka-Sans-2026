@@ -722,3 +722,34 @@ body.export-open{overflow:hidden!important}
   .discover-page .discover-lens-content,
   .discover-page .discover-lens-ring {pointer-events:none;}
 }
+
+
+/* iMac readability refinement — large exhibition viewports only.
+   The regular desktop, tablet, and phone typography stays unchanged. */
+@media (min-width:1400px) and (min-height:780px) {
+  /* Interactive typewriter hover: set code + province. */
+  .glyph-tooltip { gap:4px; max-width:290px; padding:5px 8px 4px; }
+  .tooltip-glyph { font-size:13px; }
+  .tooltip-province, .tooltip-province-static { font-size:12px; }
+  .tooltip-province::after { font-size:12px; }
+
+  /* Discover heading metadata and navigation. */
+  .discover-page .discover-eyebrow { font-size:12px; }
+  .discover-page .discover-korean-name { font-size:15px; }
+  .discover-page .discover-title-meta #discoverInfoIndex { font-size:12px; }
+  .discover-page .discover-index-big { font-size:16px; }
+  .discover-page .discover-stat-label { font-size:12px; }
+  .discover-page .discover-stat-label small { font-size:10px; }
+  .discover-page .discover-vowel-button { font-size:13px; min-height:46px; }
+  .discover-page .discover-footer,
+  .discover-page .discover-footer button { font-size:11px; }
+  .discover-page .discover-sources { font-size:13px; }
+
+  /* Provincial letterform archive: Banten / a.ss01 and all other codes. */
+  .discover-page .archive-intro { font-size:13px; }
+  .discover-page .province-grid .glyph-meta,
+  .discover-page .province-grid .province-name,
+  .discover-page .province-grid .glyph-name { font-size:12px; }
+  .discover-page .province-grid .glyph-meta { min-height:29px; }
+  .discover-page .glyph-meta { font-size:12px; }
+}

@@ -14,10 +14,10 @@ const TYPING_PAUSE_MS=2000, VOWEL_CHANGE_MS=1100;
 const IMAC_DISPLAY_QUERY='(min-width: 1400px) and (min-height: 780px)';
 const isImacDisplay=()=>window.matchMedia(IMAC_DISPLAY_QUERY).matches;
 let manuallyAdjustedTypeSize=false;
-let chars=[],variants=[],locked=[],fontSize=isImacDisplay()?340:240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
+let chars=[],variants=[],locked=[],fontSize=isImacDisplay()?460:240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
 function syncExhibitionTypeSize(){
   if(manuallyAdjustedTypeSize)return;
-  const target=isImacDisplay()?340:240;
+  const target=isImacDisplay()?460:240;
   if(fontSize!==target){fontSize=target;if(!studio.hidden)render(getCaretOffset());}
 }
 let previewEnabled=true,previewActive=false,hoveredIndex=null,typingTimer=null,lastTypeAt=0,displaySize=240;
@@ -419,9 +419,27 @@ window.addEventListener('keydown',e=>{
   if(printable)applyInput(e.key,1);
   editor.focus();
 });
-['pointerdown','keydown','wheel','touchstart'].forEach(type=>window.addEventListener(type,markActivity,{passive:true}));
-
-setInterval(()=>{if(!studio.hidden&&$('exportDialog').hidden&&Date.now()-lastActivity>90000)screensaver()},5000);
+// Exhibition inactivity: return to the animated home after 90 seconds without
+// REAL visitor input, whether the visitor is in Typewriter, Discover, or Export.
+// Pointer movement matters on a desktop/iMac: merely moving the mouse is activity.
+const IDLE_RETURN_MS = 90 * 1000;
+const activeSections = () => !studio.hidden || !$('discover').hidden;
+['pointermove','pointerdown','keydown','wheel','touchstart','scroll'].forEach(type =>
+  window.addEventListener(type, markActivity, {passive:true, capture:true}));
+function checkIdleReturn(){
+  if(!activeSections() || Date.now()-lastActivity < IDLE_RETURN_MS) return;
+  // Close any overlay, including export, so Home becomes usable immediately.
+  if(!$('exportDialog').hidden) closeExportDialog();
+  const discover = $('discover');
+  if(discover) discover.hidden = true;
+  if(document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  screensaver();
+}
+setInterval(checkIdleReturn, 1000);
+// Browser timers may be throttled when a tab is hidden; re-check on return.
+document.addEventListener('visibilitychange', () => {
+  if(!document.hidden) checkIdleReturn();
+});
 
 function createSpecimen(){
  const alternates=$('alternateGrid'),base=$('baseGrid');

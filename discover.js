@@ -64,16 +64,19 @@
     if (!svg) return;
     const matrix = svg.getScreenCTM();
     if (!matrix) return;
-    // The iMac artwork is larger: keep the X-ray circle ~160 CSS pixels
-    // across instead of letting its font-space radius scale with the artwork.
-    // Clamp to the glyph stage so the lens doesn't obscure A / E / I / O / U.
+    // Keep the lens at a consistent visual size across all 38 glyphs.
+    // Standard desktop: 230px diameter; exhibition iMac: 270px.
+    // Narrow/mobile screens cap the diameter to fit the available stage.
     const exhibition=window.matchMedia('(min-width: 1400px) and (min-height: 780px)').matches;
+    const rect=stage.getBoundingClientRect();
+    const targetDiameter=exhibition ? 270 : Math.min(230, rect.width*0.75, rect.height*0.75);
+    const radiusPx=targetDiameter/2;
     const screenScale=Math.hypot(matrix.a, matrix.b) || 1;
-    const lensRadius=exhibition?80/screenScale:null;
+    const lensRadius=radiusPx/screenScale;
+    // Keep the lens inside the stage on large screens, protecting navigation.
     if(exhibition){
-      const rect=stage.getBoundingClientRect();
-      clientX=Math.max(rect.left+80,Math.min(clientX,rect.right-80));
-      clientY=Math.max(rect.top+80,Math.min(clientY,rect.bottom-90));
+      clientX=Math.max(rect.left+radiusPx,Math.min(clientX,rect.right-radiusPx));
+      clientY=Math.max(rect.top+radiusPx,Math.min(clientY,rect.bottom-radiusPx+10));
     }
     const pt = svg.createSVGPoint();
     pt.x = clientX;
@@ -84,7 +87,7 @@
       if (!circle) continue;
       circle.setAttribute('cx', String(mapped.x));
       circle.setAttribute('cy', String(mapped.y));
-      if(exhibition)circle.setAttribute('r',String(lensRadius));
+      circle.setAttribute('r',String(lensRadius));
     }
   }
 
@@ -160,6 +163,7 @@
   };
 
   function openDiscover() {
+    if (typeof markActivity === 'function') markActivity();
     if (typeof stopHomeSequence === 'function') stopHomeSequence();
     $d('screensaver').hidden = true;
     $d('studio').hidden = true;
