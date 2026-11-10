@@ -800,3 +800,14 @@ body.export-open{overflow:hidden!important}
   .discover-page .discover-object-stage {height:100%;width:70%;}
   .discover-page .discover-info {width:82%;}
 }
+
+/* Center playground status messages on desktop, iMac, tablet and phone. */
+.studio .statusbar {
+  justify-content: center;
+}
+.studio .statusbar #status {
+  display: block;
+  flex: 1 1 100%;
+  width: 100%;
+  text-align: center;
+}
