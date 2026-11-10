@@ -691,3 +691,34 @@ body.export-open{overflow:hidden!important}
 .editor:not(:empty){caret-color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.editor-hint::after{animation:none}}
 
+
+
+/* iMac-only refinements: retain every existing laptop/desktop breakpoint. */
+@media (min-width:1400px) and (min-height:780px) {
+  /* Larger, still centered exhibition call-to-action; original desktop untouched. */
+  .screensaver .start-button {
+    min-width:clamp(300px,23vw,440px);
+    height:clamp(76px,7.4vh,112px);
+    padding:0 clamp(30px,3vw,56px);
+    font-size:clamp(17px,1.25vw,24px);
+    letter-spacing:.065em;
+  }
+  /* Keep the letterform navigation visually and interactively above the X-ray. */
+  .discover-page .discover-vowels {
+    position:relative;
+    z-index:12;
+    margin-top:14px;
+    isolation:isolate;
+  }
+  .discover-page .discover-vowels-inner,
+  .discover-page .discover-vowel-buttons {
+    position:relative;
+    z-index:13;
+  }
+  .discover-page .discover-vowel-button {position:relative;z-index:14;}
+  /* Keep the SVG itself behind the navigation, without resizing the glyph. */
+  .discover-page .discover-display {z-index:1;}
+  .discover-page .discover-object-stage {z-index:1;}
+  .discover-page .discover-lens-content,
+  .discover-page .discover-lens-ring {pointer-events:none;}
+}

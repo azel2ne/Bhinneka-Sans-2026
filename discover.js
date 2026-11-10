@@ -64,6 +64,17 @@
     if (!svg) return;
     const matrix = svg.getScreenCTM();
     if (!matrix) return;
+    // The iMac artwork is larger: keep the X-ray circle ~160 CSS pixels
+    // across instead of letting its font-space radius scale with the artwork.
+    // Clamp to the glyph stage so the lens doesn't obscure A / E / I / O / U.
+    const exhibition=window.matchMedia('(min-width: 1400px) and (min-height: 780px)').matches;
+    const screenScale=Math.hypot(matrix.a, matrix.b) || 1;
+    const lensRadius=exhibition?80/screenScale:null;
+    if(exhibition){
+      const rect=stage.getBoundingClientRect();
+      clientX=Math.max(rect.left+80,Math.min(clientX,rect.right-80));
+      clientY=Math.max(rect.top+80,Math.min(clientY,rect.bottom-90));
+    }
     const pt = svg.createSVGPoint();
     pt.x = clientX;
     pt.y = clientY;
@@ -73,6 +84,7 @@
       if (!circle) continue;
       circle.setAttribute('cx', String(mapped.x));
       circle.setAttribute('cy', String(mapped.y));
+      if(exhibition)circle.setAttribute('r',String(lensRadius));
     }
   }
 

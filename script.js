@@ -10,7 +10,16 @@ const WORDS=['keanekaragaman','nusantara','suasana','keindahan','Indonesia','ber
 const editor=$('editor'),studio=$('studio'),screen=$('screensaver');
 // After 2 seconds of no typing, unchosen vowels start their live preview.
 const TYPING_PAUSE_MS=2000, VOWEL_CHANGE_MS=1100;
-let chars=[],variants=[],locked=[],fontSize=240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
+// Exhibition-screen sizing only: ordinary desktops retain the exact 240px default.
+const IMAC_DISPLAY_QUERY='(min-width: 1400px) and (min-height: 780px)';
+const isImacDisplay=()=>window.matchMedia(IMAC_DISPLAY_QUERY).matches;
+let manuallyAdjustedTypeSize=false;
+let chars=[],variants=[],locked=[],fontSize=isImacDisplay()?340:240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
+function syncExhibitionTypeSize(){
+  if(manuallyAdjustedTypeSize)return;
+  const target=isImacDisplay()?340:240;
+  if(fontSize!==target){fontSize=target;if(!studio.hidden)render(getCaretOffset());}
+}
 let previewEnabled=true,previewActive=false,hoveredIndex=null,typingTimer=null,lastTypeAt=0,displaySize=240;
 let tooltipHover=false,tooltipHideTimer=null;
 const randomSet=ch=>SETS[ch.toLowerCase()]?Math.floor(Math.random()*(SETS[ch.toLowerCase()]+1)):0;
@@ -173,7 +182,7 @@ function resetVowels(){
   } else status('TYPE A VOWEL (A E I O U) TO SEE THE RED ANIMATION.');
   markActivity();
 }
-function enter(){screen.hidden=true;studio.hidden=false;document.body.style.overflow='auto';window.scrollTo(0,0);markActivity();if(chars.length&&previewEnabled)schedulePreview();requestAnimationFrame(()=>{fitText();editor.focus();caretAt(chars.length)})}
+function enter(){syncExhibitionTypeSize();screen.hidden=true;studio.hidden=false;document.body.style.overflow='auto';window.scrollTo(0,0);markActivity();if(chars.length&&previewEnabled)schedulePreview();requestAnimationFrame(()=>{fitText();editor.focus();caretAt(chars.length)})}
 function screensaver(){studio.hidden=true;screen.hidden=false;document.body.style.overflow='hidden';clearTimeout(typingTimer);previewActive=false;startHomeSequence()}
 
 // A browser-safe export: use pre-extracted TRUE font paths, not SVG foreignObject.
@@ -384,7 +393,7 @@ $('studioHome').addEventListener('click', screensaver);
 
 
 $('sampleButton').addEventListener('click',()=>{setText(WORDS[Math.floor(Math.random()*WORDS.length)]);editor.focus()});$('clearButton').addEventListener('click',()=>{chars=[];variants=[];locked=[];hoveredIndex=null;clearTimeout(typingTimer);previewActive=false;render(0);editor.focus();status('START TYPING.')});$('shuffleButton').addEventListener('click',shuffle);$('resetButton').addEventListener('click',resetVowels);
-$('smallerButton').addEventListener('click',()=>{fontSize=Math.max(32,fontSize-16);render(getCaretOffset());markActivity()});$('largerButton').addEventListener('click',()=>{fontSize=Math.min(300,fontSize+16);render(getCaretOffset());markActivity()});
+$('smallerButton').addEventListener('click',()=>{manuallyAdjustedTypeSize=true;fontSize=Math.max(32,fontSize-16);render(getCaretOffset());markActivity()});$('largerButton').addEventListener('click',()=>{manuallyAdjustedTypeSize=true;fontSize=Math.min(isImacDisplay()?460:300,fontSize+16);render(getCaretOffset());markActivity()});
 $('tighterButton').addEventListener('click',()=>{letterSpacing=Math.max(-.15,Math.round((letterSpacing-.01)*1000)/1000);render(getCaretOffset());markActivity()});$('looserButton').addEventListener('click',()=>{letterSpacing=Math.min(.25,Math.round((letterSpacing+.01)*1000)/1000);render(getCaretOffset());markActivity()});
 $('invertButton').addEventListener('click',()=>{isDark=!isDark;studio.classList.toggle('invert',isDark);markActivity()});
 $('saveSvg').addEventListener('click',saveSvg);$('savePng').addEventListener('click',savePng);
@@ -443,7 +452,7 @@ function createSpecimen(){
    cell.append(sample,meta);base.appendChild(cell);
  }}
 }
-window.addEventListener('resize',()=>{if(!studio.hidden)fitText();else layoutHome()});
+window.addEventListener('resize',()=>{syncExhibitionTypeSize();if(!studio.hidden)fitText();else layoutHome()});
 document.fonts.ready.then(()=>{if(!studio.hidden)fitText()});
 $('backToTop').addEventListener('click',()=>{document.getElementById('discoverMain').scrollIntoView({behavior:'smooth',block:'start'})});
 
