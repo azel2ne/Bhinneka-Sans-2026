@@ -753,3 +753,50 @@ body.export-open{overflow:hidden!important}
   .discover-page .province-grid .glyph-meta { min-height:29px; }
   .discover-page .glyph-meta { font-size:12px; }
 }
+
+
+/* V4 — iMac-specific proportion and legibility tuning.
+   Desktop, smaller laptop and phone breakpoints are unchanged. */
+@media (min-width:1400px) and (min-height:780px) {
+  /* Do not alter the existing a.ss03 hover tooltip typography. */
+  .studio .statusbar { min-height:46px; font-size:13px; line-height:1.4; }
+  .studio .statusbar #status { font-size:13px; }
+  .studio .statusbar button { font-size:13px; }
+  .studio .tool-label { font-size:13px; }
+  .studio .tool-group button, .studio .tool-group output { font-size:13px; }
+  .studio .canvas-top, .studio .canvas-top #counter { font-size:13px; }
+  .studio .site-nav-link, .studio .download-font { font-size:13px; }
+  /* Keep the caption in the specimen legible, without changing hover labels. */
+  .studio .archive-intro { font-size:13px; }
+  .studio .province-grid .glyph-meta,
+  .studio .province-grid .province-name,
+  .studio .province-grid .glyph-name {font-size:12px;}
+  /* The former main Discover panel was roughly 79dvh tall. Shrink
+     display and card together to 55dvh (~30% reduction). */
+  .discover-page { --discover-block-height:clamp(470px,55dvh,742px); }
+  .discover-page .discover-main {
+    grid-template-columns:minmax(0,1.12fr) minmax(370px,.75fr);
+    column-gap:clamp(36px,4.5vw,95px);
+    align-items:center;
+  }
+  .discover-page .discover-display {height:var(--discover-block-height);}
+  .discover-page .discover-object-stage {width:70%;height:100%;max-width:none;}
+  .discover-page .discover-info {
+    width:82%;min-height:var(--discover-block-height);
+    justify-self:center;align-self:center;transform:none;
+  }
+  /* Use compact internal spacing so the smaller card is not forced tall. */
+  .discover-page .discover-title-row {min-height:110px;padding:18px 21px 17px;}
+  .discover-page .discover-title-row h1 {font-size:clamp(29px,2.1vw,41px);}
+  .discover-page .discover-stat-row {min-height:84px;}
+  .discover-page .discover-stat {padding:15px 21px;}
+  .discover-page .discover-stat-value {margin-top:7px;font-size:clamp(18px,1.35vw,24px);}
+  .discover-page .discover-copy {padding:17px 21px;}
+  .discover-page .discover-copy p {font-size:clamp(15px,1vw,18px);line-height:1.55;}
+  .discover-page .discover-copy-kr p {font-size:clamp(14px,.95vw,17px);line-height:1.6;}
+}
+@media (min-width:1900px) and (min-height:960px) {
+  .discover-page { --discover-block-height:clamp(550px,57dvh,880px); }
+  .discover-page .discover-object-stage {height:100%;width:70%;}
+  .discover-page .discover-info {width:82%;}
+}

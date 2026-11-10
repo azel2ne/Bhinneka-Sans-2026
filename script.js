@@ -14,10 +14,10 @@ const TYPING_PAUSE_MS=2000, VOWEL_CHANGE_MS=1100;
 const IMAC_DISPLAY_QUERY='(min-width: 1400px) and (min-height: 780px)';
 const isImacDisplay=()=>window.matchMedia(IMAC_DISPLAY_QUERY).matches;
 let manuallyAdjustedTypeSize=false;
-let chars=[],variants=[],locked=[],fontSize=isImacDisplay()?460:240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
+let chars=[],variants=[],locked=[],fontSize=isImacDisplay()?396:240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
 function syncExhibitionTypeSize(){
   if(manuallyAdjustedTypeSize)return;
-  const target=isImacDisplay()?460:240;
+  const target=isImacDisplay()?396:240;
   if(fontSize!==target){fontSize=target;if(!studio.hidden)render(getCaretOffset());}
 }
 let previewEnabled=true,previewActive=false,hoveredIndex=null,typingTimer=null,lastTypeAt=0,displaySize=240;
