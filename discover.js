@@ -42,7 +42,7 @@
       <defs><clipPath id="discoverXrayClip" clipPathUnits="userSpaceOnUse"><circle id="discoverLensMask" cx="${vx+vw/2}" cy="${vy+vh/2}" r="${radius}"/></clipPath></defs>
       <path class="discover-letter-solid" transform="scale(1,-1)" d="${safePath}"/>
       <g class="discover-lens-content" clip-path="url(#discoverXrayClip)">
-        <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="#ffffff"/>
+        <rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="#fafafa" style="fill:var(--d-paper, #fafafa)"/>
         <g transform="scale(1,-1)">
           <path class="discover-xray-letter" d="${safePath}"/>
           <path class="discover-xray-guides" d="${guide}"/>
