@@ -145,3 +145,19 @@ On desktop, the Discover glyph, vowel selector, and province information panel h
 - This automatically readjusts when a province is selected or the viewport changes, including for short and narrow glyphs.
 - Mobile retains the original stacked layout.
 - DATA SOURCES accordion and archive link are untouched.
+
+## Home: dark mode and instant keyboard entry (November 11, 2026)
+- The Home background and word grid are black, with white letterforms and subtle charcoal vertical divider lines.
+- The centered CREATE YOUR OWN button remains static, now a white outline on black with white text (inverts on hover).
+- On Home, typing a printable key immediately opens the Typewriter and inserts that first character in a fresh composition. Enter, Backspace, Delete, and arrow keys also open the Typewriter.
+- Browser shortcuts, modifier-only keys, Tab, and Escape are not intercepted. Enter/Space on the focused CTA still activate its normal button action.
+- Typewriter and Discover retain their own color schemes and interactions.
+
+
+## iMac large-display layout update (November 11, 2026)
+
+- Home: eight letters per word on desktop; displays at least 1450 × 780 px show five rows, and displays at least 1900 × 960 px show six. Laptop and mobile breakpoints are preserved. Existing vowel and word-change animation is unchanged.
+- Discover: on large displays, the glyph stage becomes taller and the large vector letterform fills more of the gallery; the information card becomes a taller, narrower panel with enlarged type. Tablet/phone rules are unchanged.
+- Tuning: `homeRowCount()` in `script.js` controls home row counts and large-screen breakpoints; the last media queries in `style.css` control Discover proportions and glyph scale.
+
+Typewriter empty-state update: the caret is invisible while the editor is empty and "Type, Explore, Create!" appears. It becomes visible when typing begins. The editor remains keyboard-editable even when empty.

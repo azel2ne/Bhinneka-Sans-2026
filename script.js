@@ -1,6 +1,6 @@
 'use strict';
 // Bhinneka Sans — original, dependency-free kinetic type playground.
-// Sections: playground model + rendering · export dialog · editor input · home word wall + DVD button · specimen grid.
+// Sections: playground model + rendering · export dialog · editor input · home word wall + static CTA · specimen grid.
 const $=id=>document.getElementById(id);
 const SETS={a:9,e:10,i:6,o:8,u:5};
 const PROVINCES=[{"vowel":"a","set":"ss01","glyph":"a.ss01","province":"Banten","source_glyph":"a.ss03"},{"vowel":"a","set":"ss02","glyph":"a.ss02","province":"East Java","source_glyph":"a.ss02"},{"vowel":"a","set":"ss03","glyph":"a.ss03","province":"West Java","source_glyph":"a.ss01"},{"vowel":"a","set":"ss04","glyph":"a.ss04","province":"Central Java","source_glyph":"a.ss04"},{"vowel":"a","set":"ss05","glyph":"a.ss05","province":"DI Yogyakarta","source_glyph":"a.ss05"},{"vowel":"a","set":"ss06","glyph":"a.ss06","province":"Bali","source_glyph":"a.ss06"},{"vowel":"a","set":"ss07","glyph":"a.ss07","province":"East Nusa Tenggara","source_glyph":"a.ss07"},{"vowel":"a","set":"ss08","glyph":"a.ss08","province":"West Nusa Tenggara","source_glyph":"a.ss08"},{"vowel":"a","set":"ss09","glyph":"a.ss09","province":"DKI Jakarta","source_glyph":"a.ss09"},{"vowel":"e","set":"ss01","glyph":"e.ss01","province":"Aceh","source_glyph":"e.ss05"},{"vowel":"e","set":"ss02","glyph":"e.ss02","province":"North Sumatra","source_glyph":"e.ss03"},{"vowel":"e","set":"ss03","glyph":"e.ss03","province":"West Sumatra","source_glyph":"e.ss02"},{"vowel":"e","set":"ss04","glyph":"e.ss04","province":"Riau","source_glyph":"e.ss06"},{"vowel":"e","set":"ss05","glyph":"e.ss05","province":"Riau Islands","source_glyph":"e.ss04"},{"vowel":"e","set":"ss06","glyph":"e.ss06","province":"South Sumatra","source_glyph":"e.ss08"},{"vowel":"e","set":"ss07","glyph":"e.ss07","province":"Jambi","source_glyph":"e.ss07"},{"vowel":"e","set":"ss08","glyph":"e.ss08","province":"Bengkulu","source_glyph":"e.ss09"},{"vowel":"e","set":"ss09","glyph":"e.ss09","province":"Bangka Belitung","source_glyph":"e.ss10"},{"vowel":"e","set":"ss10","glyph":"e.ss10","province":"Lampung","source_glyph":"e.ss01"},{"vowel":"i","set":"ss01","glyph":"i.ss01","province":"South Sulawesi","source_glyph":"i.ss01"},{"vowel":"i","set":"ss02","glyph":"i.ss02","province":"West Sulawesi","source_glyph":"i.ss02"},{"vowel":"i","set":"ss03","glyph":"i.ss03","province":"Southeast Sulawesi","source_glyph":"i.ss04"},{"vowel":"i","set":"ss04","glyph":"i.ss04","province":"North Sulawesi","source_glyph":"i.ss03"},{"vowel":"i","set":"ss05","glyph":"i.ss05","province":"Central Sulawesi","source_glyph":"i.ss05"},{"vowel":"i","set":"ss06","glyph":"i.ss06","province":"Gorontalo","source_glyph":"i.ss06"},{"vowel":"o","set":"ss01","glyph":"o.ss01","province":"Papua","source_glyph":"o.ss01"},{"vowel":"o","set":"ss02","glyph":"o.ss02","province":"Central Papua","source_glyph":"o.ss05"},{"vowel":"o","set":"ss03","glyph":"o.ss03","province":"South Papua","source_glyph":"o.ss06"},{"vowel":"o","set":"ss04","glyph":"o.ss04","province":"West Papua","source_glyph":"o.ss02"},{"vowel":"o","set":"ss05","glyph":"o.ss05","province":"Maluku","source_glyph":"o.ss07"},{"vowel":"o","set":"ss06","glyph":"o.ss06","province":"North Maluku","source_glyph":"o.ss08"},{"vowel":"o","set":"ss07","glyph":"o.ss07","province":"Southwest Papua","source_glyph":"o.ss03"},{"vowel":"o","set":"ss08","glyph":"o.ss08","province":"Highland Papua","source_glyph":"o.ss04"},{"vowel":"u","set":"ss01","glyph":"u.ss01","province":"South Kalimantan","source_glyph":"u.ss01"},{"vowel":"u","set":"ss02","glyph":"u.ss02","province":"East Kalimantan","source_glyph":"u.ss02"},{"vowel":"u","set":"ss03","glyph":"u.ss03","province":"North Kalimantan","source_glyph":"u.ss03"},{"vowel":"u","set":"ss04","glyph":"u.ss04","province":"West Kalimantan","source_glyph":"u.ss04"},{"vowel":"u","set":"ss05","glyph":"u.ss05","province":"Central Kalimantan","source_glyph":"u.ss05"}];
@@ -12,11 +12,12 @@ const editor=$('editor'),studio=$('studio'),screen=$('screensaver');
 const TYPING_PAUSE_MS=2000, VOWEL_CHANGE_MS=1100;
 let chars=[],variants=[],locked=[],fontSize=240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
 let previewEnabled=true,previewActive=false,hoveredIndex=null,typingTimer=null,lastTypeAt=0,displaySize=240;
+let tooltipHover=false,tooltipHideTimer=null;
 const randomSet=ch=>SETS[ch.toLowerCase()]?Math.floor(Math.random()*(SETS[ch.toLowerCase()]+1)):0;
 const feature=n=>n?`'ss${String(n).padStart(2,'0')}' 1`:'normal';
 function markActivity(){lastActivity=Date.now()}
 function status(s){$('status').textContent=s}
-function syncVisibility(){$('counter').textContent=`${chars.length} CHARACTER${chars.length===1?'':'S'}`}
+function syncVisibility(){$('counter').textContent=`${chars.length} CHARACTER${chars.length===1?'':'S'}`;$('editorHint').hidden=chars.length>0}
 function text(){return chars.join('')}
 function getCaretOffset(){const selection=getSelection();if(!selection||!selection.rangeCount||!editor.contains(selection.anchorNode))return chars.length;const range=selection.getRangeAt(0).cloneRange();range.selectNodeContents(editor);range.setEnd(selection.anchorNode,selection.anchorOffset);return range.toString().length}
 function caretAt(offset){const selection=getSelection();if(!selection)return;const range=document.createRange();const walker=document.createTreeWalker(editor,NodeFilter.SHOW_TEXT);let node,remaining=Math.max(0,Math.min(offset,chars.length));while((node=walker.nextNode())){if(remaining<=node.textContent.length){range.setStart(node,remaining);range.collapse(true);selection.removeAllRanges();selection.addRange(range);return}remaining-=node.textContent.length}range.selectNodeContents(editor);range.collapse(false);selection.removeAllRanges();selection.addRange(range)}
@@ -24,7 +25,8 @@ function glyphLabel(i){const ch=chars[i]?.toLowerCase(),set=variants[i]||0;retur
 function updateLetter(i){
   const el=editor.querySelector(`.letter[data-index="${i}"]`); if(!el)return;
   el.style.fontFeatureSettings=feature(variants[i]||0);
-  const pending=!!SETS[chars[i]?.toLowerCase()]&&!locked[i]&&previewActive;
+  // Highlight unselected vowels as soon as they're typed, not after the preview delay.
+  const pending=!!SETS[chars[i]?.toLowerCase()]&&!locked[i];
   el.classList.toggle('pending',pending);
   el.classList.toggle('chosen',!!locked[i]);
   if(SETS[chars[i]?.toLowerCase()])el.dataset.label=glyphLabel(i);if(hoveredIndex===i)showTooltip(i);
@@ -32,19 +34,49 @@ function updateLetter(i){
 function showTooltip(i){
  const el=editor.querySelector(`.letter[data-index="${i}"]`),tip=$('glyphTooltip'),stage=editor.parentElement;
  if(!el||!SETS[chars[i]?.toLowerCase()]||!tip)return;
+ clearTimeout(tooltipHideTimer);
  const r=el.getBoundingClientRect(),sr=stage.getBoundingClientRect();
- const glyph=glyphLabel(i),province=PROVINCE_BY_GLYPH[glyph];
+ const glyph=glyphLabel(i),vowel=chars[i].toLowerCase(),variant=variants[i]||0,total=SETS[vowel];
+ const province=PROVINCE_BY_GLYPH[glyph];
  tip.replaceChildren();
- const glyphLine=document.createElement('span');glyphLine.className='tooltip-glyph';glyphLine.textContent=glyph;
+ const glyphLine=document.createElement('span');glyphLine.className='tooltip-glyph';
+ glyphLine.textContent=`${glyph}  ·  ${String(variant).padStart(2,'0')}/${String(total).padStart(2,'0')}`;
  tip.appendChild(glyphLine);
- if(province){const provinceLine=document.createElement('span');provinceLine.className='tooltip-province';provinceLine.textContent=province;tip.appendChild(provinceLine)}
+ if(province){
+   const provinceLink=document.createElement('button');
+   provinceLink.type='button';provinceLink.className='tooltip-province';
+   provinceLink.textContent=province;
+   provinceLink.setAttribute('aria-label',`Discover ${province}, ${glyph}`);
+   provinceLink.dataset.glyph=glyph;
+   provinceLink.addEventListener('click',event=>{
+     event.preventDefault();event.stopPropagation();
+     if(typeof window.BHINNEKA_OPEN_LETTERFORM==='function'){
+       window.BHINNEKA_OPEN_LETTERFORM(glyph);
+       resetTooltipHover();
+     }
+   });
+   tip.appendChild(provinceLink);
+ } else {
+   const baseLine=document.createElement('span');
+   baseLine.className='tooltip-province-static';baseLine.textContent='Plus Jakarta Sans base';
+   tip.appendChild(baseLine);
+ }
  tip.hidden=false;
- // Center the tooltip over the hovered glyph element (CSS translates by -50%).
- tip.style.left=`${r.left-sr.left+r.width/2}px`;
- // Position the tooltip 50px below the glyph element's top edge.
+ // Keep the label over the glyph without letting it run off the viewport edge.
+ const rawLeft=r.left-sr.left+r.width/2;
+ tip.style.left=`${Math.min(Math.max(rawLeft,80),Math.max(80,sr.width-80))}px`;
  tip.style.top=`${Math.max(9,r.top-sr.top+50)}px`;
 }
-function hideTooltip(){if($('glyphTooltip'))$('glyphTooltip').hidden=true}
+function hideTooltip(){clearTimeout(tooltipHideTimer);if($('glyphTooltip'))$('glyphTooltip').hidden=true}
+function resetTooltipHover(){
+ clearTimeout(tooltipHideTimer);tooltipHover=false;hoveredIndex=null;
+ setVowelPicking(false);hideTooltip();
+ editor.querySelectorAll('.letter.hovering').forEach(el=>el.classList.remove('hovering'));
+}
+function hideTooltipSoon(){
+ clearTimeout(tooltipHideTimer);
+ tooltipHideTimer=setTimeout(()=>{if(!tooltipHover)resetTooltipHover()},180);
+}
 function setVowelPicking(active){editor.classList.toggle('picking-vowel',active)}
 // Fit the text within the available studio area, without changing the user's chosen size.
 // Recalculate on text edits, Enter, resizing, and manual font-size changes.
@@ -147,10 +179,10 @@ function screensaver(){studio.hidden=true;screen.hidden=false;document.body.styl
 // A browser-safe export: use pre-extracted TRUE font paths, not SVG foreignObject.
 // Each span's on-screen position is preserved and every stylistic set has its own path.
 function glyphData(){return glyphPromise||(glyphPromise=Promise.resolve(window.BHINNEKA_GLYPHS).then(data=>{if(!data)throw new Error('Glyph data missing. Keep glyphs-data.js in the same folder.');return data}))}
-async function makeSvg(){await document.fonts.load(`${displaySize}px Bhinneka`);await document.fonts.ready;const atlas=await glyphData();const base=$('canvas');const r=base.getBoundingClientRect();const width=Math.max(400,Math.round(r.width)),height=Math.max(300,Math.round(r.height));const scale=displaySize/atlas.unitsPerEm;const ink=isDark?'#fff':'#000',paper=isDark?'#000':'#fff',pendingInk='#B02424',dimInk='#6B6B6B';let paths='';const spans=[...editor.querySelectorAll('.letter')];for(let i=0;i<spans.length;i++){const ch=chars[i];if(ch==='\n'||ch==='\r'||ch==='\t'||ch===' ')continue;const mapping=atlas.substitutions[ch];if(!mapping)continue;const glyphName=mapping[String(variants[i]||0)]||mapping['0'];const data=atlas.glyphs[glyphName];if(!data||!data.d)continue;const rect=spans[i].getBoundingClientRect();const x=rect.left-r.left;const top=rect.top-r.top;
+async function makeSvg(){await document.fonts.load(`${displaySize}px Bhinneka`);await document.fonts.ready;const atlas=await glyphData();const base=$('canvas');const r=base.getBoundingClientRect();const width=Math.max(400,Math.round(r.width)),height=Math.max(300,Math.round(r.height));const scale=displaySize/atlas.unitsPerEm;const ink=isDark?'#fff':'#000',paper=isDark?'#000':'#fff',pendingInk='#FF0000',dimInk='#6B6B6B';let paths='';const spans=[...editor.querySelectorAll('.letter')];for(let i=0;i<spans.length;i++){const ch=chars[i];if(ch==='\n'||ch==='\r'||ch==='\t'||ch===' ')continue;const mapping=atlas.substitutions[ch];if(!mapping)continue;const glyphName=mapping[String(variants[i]||0)]||mapping['0'];const data=atlas.glyphs[glyphName];if(!data||!data.d)continue;const rect=spans[i].getBoundingClientRect();const x=rect.left-r.left;const top=rect.top-r.top;
 // Browser inline box starts at the font's ascent; measure actual browser font metrics.
 const measure=document.createElement('canvas').getContext('2d');measure.font=`${displaySize}px Bhinneka`;const metrics=measure.measureText('Hg');const baseline=top+(metrics.fontBoundingBoxAscent||displaySize*atlas.ascender/atlas.unitsPerEm);
-paths+=`<path fill="${hoveredIndex!==null&&hoveredIndex!==i&&!locked[i]?dimInk:SETS[ch.toLowerCase()]&&!locked[i]&&previewActive&&hoveredIndex!==i?pendingInk:ink}" d="${data.d}" transform="translate(${x.toFixed(3)} ${baseline.toFixed(3)}) scale(${scale.toFixed(6)} ${(-scale).toFixed(6)})"/>`}
+paths+=`<path fill="${hoveredIndex!==null&&hoveredIndex!==i&&!locked[i]?dimInk:SETS[ch.toLowerCase()]&&!locked[i]&&hoveredIndex!==i?pendingInk:ink}" d="${data.d}" transform="translate(${x.toFixed(3)} ${baseline.toFixed(3)}) scale(${scale.toFixed(6)} ${(-scale).toFixed(6)})"/>`}
 return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><title>Bhinneka Sans composition</title><rect width="100%" height="100%" fill="${paper}"/><g>${paths}</g></svg>`}
 
 function download(blob,filename){
@@ -318,17 +350,31 @@ editor.addEventListener('input',()=>{
 });
 editor.addEventListener('pointerover',e=>{
   const el=e.target.closest?.('.letter.vowel');if(!el||!editor.contains(el))return;
+  tooltipHover=false;clearTimeout(tooltipHideTimer);
   hoveredIndex=Number(el.dataset.index);setVowelPicking(true);el.classList.add('hovering');showTooltip(hoveredIndex);
 });
 editor.addEventListener('pointerout',e=>{
   const el=e.target.closest?.('.letter.vowel');if(!el)return;
   if(e.relatedTarget&&el.contains(e.relatedTarget))return;
-  el.classList.remove('hovering');
   const next=e.relatedTarget?.closest?.('.letter.vowel');
-  if(next&&editor.contains(next)){hoveredIndex=Number(next.dataset.index);setVowelPicking(true);showTooltip(hoveredIndex)}
-  else{hoveredIndex=null;setVowelPicking(false);hideTooltip()}
+  if(next&&editor.contains(next)){
+    el.classList.remove('hovering');hoveredIndex=Number(next.dataset.index);
+    setVowelPicking(true);next.classList.add('hovering');showTooltip(hoveredIndex);
+  } else if(e.relatedTarget&&$('glyphTooltip').contains(e.relatedTarget)){
+    tooltipHover=true;clearTimeout(tooltipHideTimer);
+  } else hideTooltipSoon();
 });
-editor.addEventListener('pointerleave',()=>{hoveredIndex=null;setVowelPicking(false);hideTooltip();editor.querySelectorAll('.hovering').forEach(el=>el.classList.remove('hovering'))});
+editor.addEventListener('pointerleave',e=>{
+  if(e.relatedTarget&&$('glyphTooltip').contains(e.relatedTarget))return;
+  hideTooltipSoon();
+});
+$('glyphTooltip').addEventListener('pointerenter',()=>{tooltipHover=true;clearTimeout(tooltipHideTimer)});
+$('glyphTooltip').addEventListener('pointerleave',e=>{
+  tooltipHover=false;
+  const next=e.relatedTarget?.closest?.('.letter.vowel');
+  if(next&&editor.contains(next))return;
+  hideTooltipSoon();
+});
 editor.addEventListener('pointerdown',e=>{if(e.target.closest?.('.letter.vowel'))e.preventDefault()});
 editor.addEventListener('click',e=>{const el=e.target.closest?.('.letter.vowel');if(el)cycle(Number(el.dataset.index))});
 editor.addEventListener('paste',e=>{e.preventDefault();const content=(e.clipboardData||window.clipboardData).getData('text/plain');insertAtCaret(content)});
@@ -343,25 +389,26 @@ $('tighterButton').addEventListener('click',()=>{letterSpacing=Math.max(-.15,Mat
 $('invertButton').addEventListener('click',()=>{isDark=!isDark;studio.classList.toggle('invert',isDark);markActivity()});
 $('saveSvg').addEventListener('click',saveSvg);$('savePng').addEventListener('click',savePng);
 
+// A physical keyboard can enter the typewriter directly from Home.
+// Printable keys carry their first character into the editor, so typing
+// immediately after the home animation never loses the first keystroke.
 window.addEventListener('keydown',e=>{
   if(!studio.hidden&&e.key==='Escape'){editor.blur();return}
-  if(screen.hidden)return;
-  if(e.metaKey||e.ctrlKey||e.altKey)return;
-  if(e.key.length===1){
-    e.preventDefault();
-    enter();
-    chars=[];variants=[];locked=[];hoveredIndex=null;previewActive=false;
-    render(0);
-    applyInput(e.key,1);
-    editor.focus();
-  }else if(e.key==='Enter'){
-    e.preventDefault();
-    enter();
-    chars=[];variants=[];locked=[];hoveredIndex=null;previewActive=false;
-    render(0);
-    applyInput('\n',1);
-    editor.focus();
-  }
+  if(screen.hidden||e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey)return;
+  // Preserve native keyboard activation of the centered CTA (Tab + Enter/Space).
+  if(document.activeElement===$('startButton')&&(e.key==='Enter'||e.key===' '))return;
+  const printable=e.key.length===1&&!e.isComposing;
+  const opensEditor=['Enter','Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key);
+  const compositionStart=e.isComposing||e.key==='Process'||e.key==='Dead';
+  // Ignore Tab, modifier-only keys, Escape and browser/system shortcuts.
+  if(!printable&&!opensEditor&&!compositionStart)return;
+  if(!compositionStart)e.preventDefault();
+  // A keyboard-initiated session starts with a fresh composition.
+  chars=[];variants=[];locked=[];hoveredIndex=null;previewActive=false;
+  render(0);
+  enter();
+  if(printable)applyInput(e.key,1);
+  editor.focus();
 });
 ['pointerdown','keydown','wheel','touchstart'].forEach(type=>window.addEventListener(type,markActivity,{passive:true}));
 
@@ -414,13 +461,23 @@ const HOME_WORD_BANK = {
   4: ['rasa','awan','aura','laut','riuh','usia','seni','emas','pagi','asri']
 };
 // Rows increase as columns shrink, filling tall/narrow screens.
+// On exhibition-size displays fill the canvas with five or six rows.
+// Laptops retain the existing three-row composition.
 const HOME_ROWS_BY_COLUMNS={8:3,7:4,6:5,5:6,4:7};
-function homeRowCount(){return HOME_ROWS_BY_COLUMNS[homeColumns]||3;}
+function homeRowCount(){
+  if(homeColumns===8){
+    if(window.innerWidth>=1900 && window.innerHeight>=960)return 6;
+    if(window.innerWidth>=1450 && window.innerHeight>=780)return 5;
+    return 3;
+  }
+  return HOME_ROWS_BY_COLUMNS[homeColumns]||3;
+}
 const HOME_VOWEL_CYCLE_MS=5000;
 const HOME_WORD_SWAP_MS=60000;
 const HOME_JUMP_MS=780;
 let homeCells=[];
 let homeColumns=8;
+let homeRenderedRows=0;
 let homeWords=[];
 let homeIntervals=[];
 let homeTimeouts=[];
@@ -486,6 +543,7 @@ function buildHomeBoard(words){
   board.style.setProperty('--home-rows',String(homeRowCount()));
   homeCells=[];
   homeWords=words;
+  homeRenderedRows=words.length;
   words.forEach((word,row)=>{
     [...word].forEach((ch,col)=>{
       const cell=document.createElement('div');
@@ -563,56 +621,8 @@ function shuffleHomeWords(){
   },total));
 }
 
-// Classic screensaver logo: moves continuously and rebounds off viewport edges.
-const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-const DVD_SPEED=135; // pixels per second at a 1000px reference width
-const DVD_COLORS=['#dedede','#b9c6e5','#dfd6ba','#d0dfcc','#d9c9d9','#d3e0e0','#dedede'];
-const dvd={x:0,y:0,vx:0,vy:0,last:0,frame:0,colorIndex:0,initialized:false};
-const dvdButton=$('startButton');
-function dvdColor(){
-  dvd.colorIndex=(dvd.colorIndex+1)%DVD_COLORS.length;
-  dvdButton.style.backgroundColor=DVD_COLORS[dvd.colorIndex];
-  dvdButton.style.borderColor=DVD_COLORS[dvd.colorIndex];
-  dvdButton.style.color='#111';
-}
-function positionDvd(){dvdButton.style.transform=`translate3d(${dvd.x}px,${dvd.y}px,0)`;}
-function resetDvdPosition(){
-  const bounds=screen.getBoundingClientRect();
-  const w=dvdButton.offsetWidth||220,h=dvdButton.offsetHeight||48;
-  const maxX=Math.max(0,bounds.width-w), maxY=Math.max(0,bounds.height-h);
-  if(!dvd.initialized){dvd.x=maxX*.48;dvd.y=maxY*.48;dvd.vx=DVD_SPEED;dvd.vy=DVD_SPEED*.76;dvd.initialized=true;}
-  dvd.x=Math.min(maxX,Math.max(0,dvd.x));
-  dvd.y=Math.min(maxY,Math.max(0,dvd.y));
-  positionDvd();
-}
-function animateDvd(now){
-  if(screen.hidden){dvd.frame=0;return;}
-  if(!dvd.last)dvd.last=now;
-  const dt=Math.min(.05,(now-dvd.last)/1000);dvd.last=now;
-  const maxX=Math.max(0,screen.clientWidth-dvdButton.offsetWidth);
-  const maxY=Math.max(0,screen.clientHeight-dvdButton.offsetHeight);
-  if(!reducedMotion.matches){
-    dvd.x+=dvd.vx*dt; dvd.y+=dvd.vy*dt;
-    let bounced=false;
-    if(dvd.x<=0){dvd.x=0;dvd.vx=Math.abs(dvd.vx);bounced=true;}
-    if(dvd.x>=maxX){dvd.x=maxX;dvd.vx=-Math.abs(dvd.vx);bounced=true;}
-    if(dvd.y<=0){dvd.y=0;dvd.vy=Math.abs(dvd.vy);bounced=true;}
-    if(dvd.y>=maxY){dvd.y=maxY;dvd.vy=-Math.abs(dvd.vy);bounced=true;}
-    if(bounced)dvdColor();
-    positionDvd();
-  }
-  dvd.frame=requestAnimationFrame(animateDvd);
-}
-function startDvd(){
-  if(dvd.frame)cancelAnimationFrame(dvd.frame);
-  dvd.last=0;
-  resetDvdPosition();
-  dvd.frame=requestAnimationFrame(animateDvd);
-}
-function stopDvd(){
-  if(dvd.frame)cancelAnimationFrame(dvd.frame);
-  dvd.frame=0;dvd.last=0;
-}
+// The landing call-to-action is fixed at the center via CSS.
+// The word wall retains its independent typography animations.
 function createScreensaver(){
   homeColumns=homeColumnCount();
   buildHomeBoard(randomWordPool());
@@ -620,24 +630,21 @@ function createScreensaver(){
 function startHomeSequence(){
   stopHomeSequence();
   const cols=homeColumnCount();
-  if(cols!==homeColumns||!$('homeBoard')?.children.length){
+  if(cols!==homeColumns||homeRenderedRows!==homeRowCount()||!$('homeBoard')?.children.length){
     homeColumns=cols;
     buildHomeBoard(randomWordPool());
   }
-  startDvd();
   rememberHomeTimeout(setTimeout(spinHomeVowels,1400));
   homeIntervals.push(setInterval(spinHomeVowels,HOME_VOWEL_CYCLE_MS));
   homeIntervals.push(setInterval(shuffleHomeWords,HOME_WORD_SWAP_MS));
 }
 function stopHomeSequence(){
-  stopDvd();
   clearHomeTimers();
   homeCells.forEach(item=>item.span.classList.remove('spinning'));
 }
 function layoutHome(){
-  if(!screen.hidden)resetDvdPosition();
   const cols=homeColumnCount();
-  if(cols!==homeColumns){
+  if(cols!==homeColumns||homeRenderedRows!==homeRowCount()){
     const wasActive=!screen.hidden;
     stopHomeSequence();
     homeColumns=cols;
