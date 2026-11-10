@@ -12,7 +12,7 @@ const editor=$('editor'),studio=$('studio'),screen=$('screensaver');
 const TYPING_PAUSE_MS=2000, VOWEL_CHANGE_MS=1100;
 // Exhibition-screen sizing only: ordinary desktops retain the exact 240px default.
 const IMAC_DISPLAY_QUERY='(min-width: 1400px) and (min-height: 780px)';
-const isImacDisplay=()=>window.matchMedia(IMAC_DISPLAY_QUERY).matches;
+const isImacDisplay=()=>document.documentElement.classList.contains('imac-mode') && window.matchMedia(IMAC_DISPLAY_QUERY).matches;
 let manuallyAdjustedTypeSize=false;
 let chars=[],variants=[],locked=[],fontSize=isImacDisplay()?396:240,letterSpacing=-0.035,isDark=false,lastActivity=Date.now(),glyphPromise=null;
 function syncExhibitionTypeSize(){
@@ -493,8 +493,8 @@ const HOME_WORD_BANK = {
 const HOME_ROWS_BY_COLUMNS={8:3,7:4,6:5,5:6,4:7};
 function homeRowCount(){
   if(homeColumns===8){
-    if(window.innerWidth>=1900 && window.innerHeight>=960)return 6;
-    if(window.innerWidth>=1450 && window.innerHeight>=780)return 5;
+    if(isImacDisplay() && window.innerWidth>=1900 && window.innerHeight>=960)return 6;
+    if(isImacDisplay() && window.innerWidth>=1450 && window.innerHeight>=780)return 5;
     return 3;
   }
   return HOME_ROWS_BY_COLUMNS[homeColumns]||3;

@@ -67,7 +67,7 @@
     // Keep the lens at a consistent visual size across all 38 glyphs.
     // Standard desktop: 230px diameter; exhibition iMac: 350px.
     // Narrow/mobile screens cap the diameter to fit the available stage.
-    const exhibition=window.matchMedia('(min-width: 1400px) and (min-height: 780px)').matches;
+    const exhibition=document.documentElement.classList.contains('imac-mode') && window.matchMedia('(min-width: 1400px) and (min-height: 780px)').matches;
     const rect=stage.getBoundingClientRect();
     const targetDiameter=exhibition ? 350 : Math.min(230, rect.width*0.75, rect.height*0.75);
     const radiusPx=Math.min(targetDiameter,rect.width*0.92,rect.height*0.92)/2;

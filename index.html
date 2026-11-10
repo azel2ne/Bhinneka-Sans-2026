@@ -1,5 +1,13 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000000"><title>Bhinneka Sans</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><link rel="stylesheet" href="style.css"><script src="glyphs-data.js" defer></script><script src="script.js" defer></script><script src="discover-data.js" defer></script><script src="xray-data.js" defer></script><script src="discover.js" defer></script></head>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000000"><title>Bhinneka Sans</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><script>
+/* Large-display styling responds to the physical display proportions as well as
+   the browser viewport. A fullscreen 16:10 MacBook must keep desktop mode. */
+(function(){
+  const sw=window.screen.width, sh=window.screen.height;
+  const physicalRatio=Math.max(sw,sh)/Math.max(1,Math.min(sw,sh));
+  document.documentElement.classList.toggle('imac-mode', physicalRatio>=1.70);
+})();
+</script><link rel="stylesheet" href="style.css"><script src="glyphs-data.js" defer></script><script src="script.js" defer></script><script src="discover-data.js" defer></script><script src="xray-data.js" defer></script><script src="discover.js" defer></script></head>
 <body>
 <section id="screensaver" class="screensaver" aria-label="Bhinneka Sans interactive screensaver">
   <div class="home-board-wrap">

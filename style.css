@@ -617,51 +617,51 @@ body.export-open{overflow:hidden!important}
 /* Keep the familiar 8-column home wall, but fill the tall displays
    with additional words. Exactly 5 or 6 rows are chosen in script.js. */
 @media (min-width:1450px) and (min-height:780px){
-  .home-letter{
+  html.imac-mode .home-letter {
     font-size:min(calc(83vw / var(--home-cols,8)),calc(86dvh / var(--home-rows,5)),230px);
   }
 }
 /* Discover: portrait-biased glyph panel and taller editorial data sheet.
    Applied only at exhibition-size viewports; laptops and phones remain intact. */
 @media (min-width:1400px) and (min-height:780px){
-  .discover-page{
+  html.imac-mode .discover-page {
     --discover-block-height:clamp(670px,79dvh,1060px);
   }
-  .discover-page .discover-main{
+  html.imac-mode .discover-page .discover-main {
     grid-template-columns:minmax(0,1.12fr) minmax(370px,.75fr);
     column-gap:clamp(36px,4.5vw,95px);
     padding:clamp(34px,4vh,65px) clamp(54px,6vw,150px) 30px;
     align-items:center;
     min-height:calc(100dvh - var(--header-h) - 44px);
   }
-  .discover-page .discover-display{height:var(--discover-block-height)}
-  .discover-page .discover-object-stage{
+  html.imac-mode .discover-page .discover-display {height:var(--discover-block-height)}
+  html.imac-mode .discover-page .discover-object-stage {
     width:96%;height:104%;max-width:none;
   }
-  .discover-page .discover-gallery{
+  html.imac-mode .discover-page .discover-gallery {
     transform:none;
     align-self:center;
   }
-  .discover-page .discover-vowels{margin-top:8px;}
-  .discover-page .discover-info{
+  html.imac-mode .discover-page .discover-vowels {margin-top:8px;}
+  html.imac-mode .discover-page .discover-info {
     min-height:var(--discover-block-height);
     transform:none;
   }
-  .discover-page .discover-title-row{min-height:155px;padding:26px 28px 24px}
-  .discover-page .discover-title-row h1{font-size:clamp(34px,2.55vw,52px)}
-  .discover-page .discover-stat-row{min-height:117px}
-  .discover-page .discover-stat{padding:24px 28px}
-  .discover-page .discover-stat-value{font-size:clamp(20px,1.65vw,29px)}
-  .discover-page .discover-copy{padding:24px 28px}
-  .discover-page .discover-copy p{font-size:clamp(17px,1.1vw,21px);line-height:1.65}
-  .discover-page .discover-copy-kr p{font-size:clamp(16px,1.05vw,20px);line-height:1.7}
+  html.imac-mode .discover-page .discover-title-row {min-height:155px;padding:26px 28px 24px}
+  html.imac-mode .discover-page .discover-title-row h1 {font-size:clamp(34px,2.55vw,52px)}
+  html.imac-mode .discover-page .discover-stat-row {min-height:117px}
+  html.imac-mode .discover-page .discover-stat {padding:24px 28px}
+  html.imac-mode .discover-page .discover-stat-value {font-size:clamp(20px,1.65vw,29px)}
+  html.imac-mode .discover-page .discover-copy {padding:24px 28px}
+  html.imac-mode .discover-page .discover-copy p {font-size:clamp(17px,1.1vw,21px);line-height:1.65}
+  html.imac-mode .discover-page .discover-copy-kr p {font-size:clamp(16px,1.05vw,20px);line-height:1.7}
 }
 /* Gigantic screens: pull the artwork further up in scale while
    maintaining padding around the navigation arrows. */
 @media (min-width:1900px) and (min-height:960px){
-  .discover-page{--discover-block-height:clamp(790px,81dvh,1260px)}
-  .discover-page .discover-object-stage{height:108%;width:98%}
-  .discover-page .discover-main{grid-template-columns:minmax(0,1.10fr) minmax(440px,.72fr)}
+  html.imac-mode .discover-page {--discover-block-height:clamp(790px,81dvh,1260px)}
+  html.imac-mode .discover-page .discover-object-stage {height:108%;width:98%}
+  html.imac-mode .discover-page .discover-main {grid-template-columns:minmax(0,1.10fr) minmax(440px,.72fr)}
 }
 
 /* Empty typewriter — full-size typographic instruction with a cursor directly after it.
@@ -695,110 +695,101 @@ body.export-open{overflow:hidden!important}
 
 /* iMac-only refinements: retain every existing laptop/desktop breakpoint. */
 @media (min-width:1400px) and (min-height:780px) {
-  /* Larger, still centered exhibition call-to-action; original desktop untouched. */
-  .screensaver .start-button {
+  html.imac-mode .screensaver .start-button {
     min-width:clamp(300px,23vw,440px);
     height:clamp(76px,7.4vh,112px);
     padding:0 clamp(30px,3vw,56px);
     font-size:clamp(17px,1.25vw,24px);
     letter-spacing:.065em;
   }
-  /* Keep the letterform navigation visually and interactively above the X-ray. */
-  .discover-page .discover-vowels {
+  html.imac-mode .discover-page .discover-vowels {
     position:relative;
     z-index:12;
     margin-top:14px;
     isolation:isolate;
   }
-  .discover-page .discover-vowels-inner,
-  .discover-page .discover-vowel-buttons {
+  html.imac-mode .discover-page .discover-vowels-inner,
+  html.imac-mode .discover-page .discover-vowel-buttons {
     position:relative;
     z-index:13;
   }
-  .discover-page .discover-vowel-button {position:relative;z-index:14;}
-  /* Keep the SVG itself behind the navigation, without resizing the glyph. */
-  .discover-page .discover-display {z-index:1;}
-  .discover-page .discover-object-stage {z-index:1;}
-  .discover-page .discover-lens-content,
-  .discover-page .discover-lens-ring {pointer-events:none;}
+  html.imac-mode .discover-page .discover-vowel-button {position:relative;z-index:14;}
+  html.imac-mode .discover-page .discover-display {z-index:1;}
+  html.imac-mode .discover-page .discover-object-stage {z-index:1;}
+  html.imac-mode .discover-page .discover-lens-content,
+  html.imac-mode .discover-page .discover-lens-ring {pointer-events:none;}
 }
 
 
 /* iMac readability refinement — large exhibition viewports only.
    The regular desktop, tablet, and phone typography stays unchanged. */
 @media (min-width:1400px) and (min-height:780px) {
-  /* Interactive typewriter hover: set code + province. */
-  .glyph-tooltip { gap:4px; max-width:290px; padding:5px 8px 4px; }
-  .tooltip-glyph { font-size:13px; }
-  .tooltip-province, .tooltip-province-static { font-size:12px; }
-  .tooltip-province::after { font-size:12px; }
-
-  /* Discover heading metadata and navigation. */
-  .discover-page .discover-eyebrow { font-size:12px; }
-  .discover-page .discover-korean-name { font-size:15px; }
-  .discover-page .discover-title-meta #discoverInfoIndex { font-size:12px; }
-  .discover-page .discover-index-big { font-size:16px; }
-  .discover-page .discover-stat-label { font-size:12px; }
-  .discover-page .discover-stat-label small { font-size:10px; }
-  .discover-page .discover-vowel-button { font-size:13px; min-height:46px; }
-  .discover-page .discover-footer,
-  .discover-page .discover-footer button { font-size:11px; }
-  .discover-page .discover-sources { font-size:13px; }
-
-  /* Provincial letterform archive: Banten / a.ss01 and all other codes. */
-  .discover-page .archive-intro { font-size:13px; }
-  .discover-page .province-grid .glyph-meta,
-  .discover-page .province-grid .province-name,
-  .discover-page .province-grid .glyph-name { font-size:12px; }
-  .discover-page .province-grid .glyph-meta { min-height:29px; }
-  .discover-page .glyph-meta { font-size:12px; }
+  html.imac-mode .glyph-tooltip { gap:4px; max-width:290px; padding:5px 8px 4px; }
+  html.imac-mode .tooltip-glyph { font-size:13px; }
+  html.imac-mode .tooltip-province,
+  html.imac-mode .tooltip-province-static { font-size:12px; }
+  html.imac-mode .tooltip-province::after { font-size:12px; }
+  html.imac-mode .discover-page .discover-eyebrow { font-size:12px; }
+  html.imac-mode .discover-page .discover-korean-name { font-size:15px; }
+  html.imac-mode .discover-page .discover-title-meta #discoverInfoIndex { font-size:12px; }
+  html.imac-mode .discover-page .discover-index-big { font-size:16px; }
+  html.imac-mode .discover-page .discover-stat-label { font-size:12px; }
+  html.imac-mode .discover-page .discover-stat-label small { font-size:10px; }
+  html.imac-mode .discover-page .discover-vowel-button { font-size:13px; min-height:46px; }
+  html.imac-mode .discover-page .discover-footer,
+  html.imac-mode .discover-page .discover-footer button { font-size:11px; }
+  html.imac-mode .discover-page .discover-sources { font-size:13px; }
+  html.imac-mode .discover-page .archive-intro { font-size:13px; }
+  html.imac-mode .discover-page .province-grid .glyph-meta,
+  html.imac-mode .discover-page .province-grid .province-name,
+  html.imac-mode .discover-page .province-grid .glyph-name { font-size:12px; }
+  html.imac-mode .discover-page .province-grid .glyph-meta { min-height:29px; }
+  html.imac-mode .discover-page .glyph-meta { font-size:12px; }
 }
 
 
 /* V4 — iMac-specific proportion and legibility tuning.
    Desktop, smaller laptop and phone breakpoints are unchanged. */
 @media (min-width:1400px) and (min-height:780px) {
-  /* Do not alter the existing a.ss03 hover tooltip typography. */
-  .studio .statusbar { min-height:46px; font-size:13px; line-height:1.4; }
-  .studio .statusbar #status { font-size:13px; }
-  .studio .statusbar button { font-size:13px; }
-  .studio .tool-label { font-size:13px; }
-  .studio .tool-group button, .studio .tool-group output { font-size:13px; }
-  .studio .canvas-top, .studio .canvas-top #counter { font-size:13px; }
-  .studio .site-nav-link, .studio .download-font { font-size:13px; }
-  /* Keep the caption in the specimen legible, without changing hover labels. */
-  .studio .archive-intro { font-size:13px; }
-  .studio .province-grid .glyph-meta,
-  .studio .province-grid .province-name,
-  .studio .province-grid .glyph-name {font-size:12px;}
-  /* The former main Discover panel was roughly 79dvh tall. Shrink
-     display and card together to 55dvh (~30% reduction). */
-  .discover-page { --discover-block-height:clamp(470px,55dvh,742px); }
-  .discover-page .discover-main {
+  html.imac-mode .studio .statusbar { min-height:46px; font-size:13px; line-height:1.4; }
+  html.imac-mode .studio .statusbar #status { font-size:13px; }
+  html.imac-mode .studio .statusbar button { font-size:13px; }
+  html.imac-mode .studio .tool-label { font-size:13px; }
+  html.imac-mode .studio .tool-group button,
+  html.imac-mode .studio .tool-group output { font-size:13px; }
+  html.imac-mode .studio .canvas-top,
+  html.imac-mode .studio .canvas-top #counter { font-size:13px; }
+  html.imac-mode .studio .site-nav-link,
+  html.imac-mode .studio .download-font { font-size:13px; }
+  html.imac-mode .studio .archive-intro { font-size:13px; }
+  html.imac-mode .studio .province-grid .glyph-meta,
+  html.imac-mode .studio .province-grid .province-name,
+  html.imac-mode .studio .province-grid .glyph-name {font-size:12px;}
+  html.imac-mode .discover-page { --discover-block-height:clamp(470px,55dvh,742px); }
+  html.imac-mode .discover-page .discover-main {
     grid-template-columns:minmax(0,1.12fr) minmax(370px,.75fr);
     column-gap:clamp(36px,4.5vw,95px);
     align-items:center;
   }
-  .discover-page .discover-display {height:var(--discover-block-height);}
-  .discover-page .discover-object-stage {width:70%;height:100%;max-width:none;}
-  .discover-page .discover-info {
+  html.imac-mode .discover-page .discover-display {height:var(--discover-block-height);}
+  html.imac-mode .discover-page .discover-object-stage {width:70%;height:100%;max-width:none;}
+  html.imac-mode .discover-page .discover-info {
     width:82%;min-height:var(--discover-block-height);
     justify-self:center;align-self:center;transform:none;
   }
-  /* Use compact internal spacing so the smaller card is not forced tall. */
-  .discover-page .discover-title-row {min-height:110px;padding:18px 21px 17px;}
-  .discover-page .discover-title-row h1 {font-size:clamp(29px,2.1vw,41px);}
-  .discover-page .discover-stat-row {min-height:84px;}
-  .discover-page .discover-stat {padding:15px 21px;}
-  .discover-page .discover-stat-value {margin-top:7px;font-size:clamp(18px,1.35vw,24px);}
-  .discover-page .discover-copy {padding:17px 21px;}
-  .discover-page .discover-copy p {font-size:clamp(15px,1vw,18px);line-height:1.55;}
-  .discover-page .discover-copy-kr p {font-size:clamp(14px,.95vw,17px);line-height:1.6;}
+  html.imac-mode .discover-page .discover-title-row {min-height:110px;padding:18px 21px 17px;}
+  html.imac-mode .discover-page .discover-title-row h1 {font-size:clamp(29px,2.1vw,41px);}
+  html.imac-mode .discover-page .discover-stat-row {min-height:84px;}
+  html.imac-mode .discover-page .discover-stat {padding:15px 21px;}
+  html.imac-mode .discover-page .discover-stat-value {margin-top:7px;font-size:clamp(18px,1.35vw,24px);}
+  html.imac-mode .discover-page .discover-copy {padding:17px 21px;}
+  html.imac-mode .discover-page .discover-copy p {font-size:clamp(15px,1vw,18px);line-height:1.55;}
+  html.imac-mode .discover-page .discover-copy-kr p {font-size:clamp(14px,.95vw,17px);line-height:1.6;}
 }
 @media (min-width:1900px) and (min-height:960px) {
-  .discover-page { --discover-block-height:clamp(550px,57dvh,880px); }
-  .discover-page .discover-object-stage {height:100%;width:70%;}
-  .discover-page .discover-info {width:82%;}
+  html.imac-mode .discover-page { --discover-block-height:clamp(550px,57dvh,880px); }
+  html.imac-mode .discover-page .discover-object-stage {height:100%;width:70%;}
+  html.imac-mode .discover-page .discover-info {width:82%;}
 }
 
 /* Center playground status messages on desktop, iMac, tablet and phone. */
@@ -810,4 +801,24 @@ body.export-open{overflow:hidden!important}
   flex: 1 1 100%;
   width: 100%;
   text-align: center;
+}
+
+/* iMac only: match Discover HOME / TYPEWRITER / DISCOVER navigation
+   to the Typewriter page's 13px subtext. Desktop stays unchanged. */
+@media (min-width:1400px) and (min-height:780px) {
+  html.imac-mode .discover-page .site-nav-link { font-size:13px; }
+}
+
+/* Exhibition iMac — align Discover's small UI labels with the 13px
+   Typewriter subtext. Normal responsive behavior is preserved. */
+@media (min-width:1400px) and (min-height:780px) {
+  html.imac-mode .discover-page .discover-nav .site-nav-link,
+  html.imac-mode .discover-page .discover-eyebrow,
+  html.imac-mode .discover-page .discover-title-meta #discoverInfoIndex,
+  html.imac-mode .discover-page .discover-stat-label,
+  html.imac-mode .discover-page .discover-stat-label small,
+  html.imac-mode .discover-page .discover-footer,
+  html.imac-mode .discover-page .discover-footer button {
+    font-size:13px;
+  }
 }
